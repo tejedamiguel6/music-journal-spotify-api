@@ -1,0 +1,28 @@
+.container {
+    padding-top:120px;
+    h1 {
+        text-align: center;
+        font-size: large;
+
+    }
+}
+
+.tracksContainer {
+    padding-top: 40px;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 auto;
+    
+    
+}
+
+.albumImage {
+    width: 300px;
+    height: auto;
+    h1 {
+        text-align: center;
+    }
+    
+}

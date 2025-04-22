@@ -1,0 +1,19 @@
+.container {
+    /* border: 1px solid red; */
+    margin: auto;
+    width: 900px;
+    
+}
+
+.postTitle {
+    text-align: center;
+    padding: 20px;
+}
+
+
+.aiImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+}
