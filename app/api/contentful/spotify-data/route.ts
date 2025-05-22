@@ -13,7 +13,7 @@ export async function GET(request) {
   try {
     const url = new URL(request.url);
 
-    console.log(url, "this is the URL");
+    // console.log(url, "this is the URL");
     const dataType = url.searchParams.get("type") || "recent-tracks";
 
     // Get token directly from cookies
@@ -35,7 +35,7 @@ export async function GET(request) {
     // Choose Spotify endpoint based on dataType
     let endpoint = "https://api.spotify.com/v1/me/";
     if (dataType === "top-tracks") {
-      endpoint = "https://api.spotify.com/v1/me/top/tracks?limit=20";
+      endpoint = "https://api.spotify.com/v1/me/top/tracks?limit=40";
     }
 
     if (dataType === "top-artists") {

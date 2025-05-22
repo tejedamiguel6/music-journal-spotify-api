@@ -58,10 +58,11 @@ export async function GET(request) {
       });
     }
 
-    // console.log("Token data:", tokenData);
+    // Token data log removed for security
 
+    // Use environment variable for redirect URL instead of hardcoded value
     return NextResponse.redirect(
-      new URL("http://localhost:3000/", request.url)
+      new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000/", request.url)
     );
   } catch (error) {
     console.error("Authentication error:", error);

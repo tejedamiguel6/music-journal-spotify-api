@@ -9,9 +9,6 @@ import Profile from "./components/spotify-profile/profile";
 import UserTopArtists from "./components/spotify-user-data/user-top-artists";
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("spotify_access_token")?.value;
-
   const query = `
    query DREAM_AI_MAP {
   pageCollection(where: {slug: "dream-map"}, limit: 1) {
@@ -68,24 +65,12 @@ export default async function Page() {
       {/* start spotify  */}
       <div className="grid [grid-template-columns:repeat(6,1fr)]">
         <div className="col-span-2">
-          <Profile accessToken={accessToken} />
+          <Profile />
         </div>
 
         <div className="col-span-4">
-          <UserTopArtists
-            accessToken={accessToken}
-            limit={2}
-            className="grid grid-cols-2 mt-8 gap-4"
-          />
+          <UserTopArtists limit={2} className="grid grid-cols-2 mt-8 gap-4" />
         </div>
-
-        {/* <div className="col-span-4">
-          <UserTopArtists
-            accessToken={accessToken}
-            limit={2}
-            className="grid grid-cols-2 mt-8 gap-4"
-          />
-        </div> */}
       </div>
     </>
   );

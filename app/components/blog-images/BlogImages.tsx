@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "./blog-images.module.css";
 
 export default function BlogImages({ imageData }) {
-  console.log("image data", imageData);
+  // console.log("image data", imageData);
   return (
     <div className={styles.container}>
       <div key={imageData.sys.id} className={styles.card}>

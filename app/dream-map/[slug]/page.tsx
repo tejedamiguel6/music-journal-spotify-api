@@ -53,7 +53,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <div key={index}>
               {item.aiMediaCollection?.items.map(
                 (collection, index: number) => {
-                  console.log(collection, "get posts");
                   const posts = collection?.post?.content.json?.content;
                   return (
                     <>

@@ -17,7 +17,7 @@ export async function getSpotifyData(endpoint: string) {
 
     // call our refresh token
     const refreshResponse = await fetch(
-      "http://localhost:3000/api/spotify/refresh",
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/spotify/refresh`,
       {
         method: "GET",
         credentials: "include",
@@ -35,7 +35,7 @@ export async function getSpotifyData(endpoint: string) {
     // get the new access token
     const refreshData = await refreshResponse.json();
     accessToken = refreshData.access_token;
-    console.log("New access token: ", accessToken);
+    // Access token log removed for security
 
     // try again with the new token
     response = await fetch(`https://api.spotify.com/v1/${endpoint}`, {

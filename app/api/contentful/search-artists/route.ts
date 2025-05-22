@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
   console.log("Incoming request from origin:", request.headers.get("origin"));
   const headers = {
-    "Access-Control-Allow-Origin": "http://localhost:8000", // allow Contentful App dev server
+    "Access-Control-Allow-Origin": process.env.CONTENTFUL_APP_URL || "http://localhost:8000", // allow Contentful App dev server
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Credentials": "true",
@@ -19,16 +19,17 @@ export async function GET(request: Request) {
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("spotify_access_token")?.value;
-  console.log("Access Token:--->", accessToken);
+  // Access token log removed for security
 
   try {
+    // make this only for artist so delete the type
     const endpoint = `https://api.spotify.com/v1/search?q=${query}&type=${type}`;
 
     if (!accessToken) {
       return new NextResponse(
         JSON.stringify({
           error:
-            "No Spotify token found. Please log in at http://localhost:3000/api/spotify/login",
+            `No Spotify token found. Please log in at ${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/spotify/login`,
         }),
         { status: 401, headers }
       );
@@ -56,7 +57,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "http://localhost:8000",
+      "Access-Control-Allow-Origin": process.env.CONTENTFUL_APP_URL || "http://localhost:8000",
       "Access-Control-Allow-Methods": "GET, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Credentials": "true",

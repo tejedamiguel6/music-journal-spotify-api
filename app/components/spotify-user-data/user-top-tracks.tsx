@@ -1,42 +1,61 @@
+"use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import styles from "./user-top-track.module.css";
 import createSlug from "@/app/lib/utils/create-slug";
 
-export default async function TopTracks({ userTopItemsData }) {
+export default function TopTracks({ userTopItemsData }) {
+  const block = userTopItemsData?.blockTopArtistsCollection?.items?.[0];
+  const tracks = block?.topArtists?.items ?? [];
+
+  const [groupedArtists, setGroupedArtists] = useState({});
+
+  useEffect(() => {
+    if (!Array.isArray(tracks) || tracks.length === 0) return;
+
+    const grouped = tracks.reduce((acc, track) => {
+      const artistId = track.artists?.[0]?.id;
+      if (!artistId) return acc;
+
+      if (!acc[artistId]) {
+        acc[artistId] = [];
+      }
+
+      acc[artistId].push(track);
+      return acc;
+    }, {});
+
+    setGroupedArtists(grouped);
+  }, [tracks]);
+
   return (
-    <div className={styles.container}>
-      <h1>Top SONGS</h1>
-      <div className={styles.tracksContainer}>
-        {userTopItemsData?.items?.map((track) => {
-          const { album, artists } = track;
-          console.log("artist Onject", track.album.name);
-          // console.log("@@@===>", album.images[0].url, "");
-          return (
-            <div>
-              {JSON.stringify(track.abum, null, 2)}
-              <div className={styles.albumImage}>
-                <Link
-                  href={`/music-journal/top-items/track-memories/${createSlug(
-                    track.name
-                  )}/?id=${track.id}`}
-                >
-                  <Image
-                    src={album.images[0].url}
-                    width={album.images[0].width}
-                    height={album.images[0].height}
-                    alt={"something "}
-                  />
-                </Link>
+    <div className={styles.tracksContainer}>
+      {Object.entries(groupedArtists).map(([artistId, tracks]) => {
+        const firstTrack = tracks[0];
+        const artistName = firstTrack?.artists[0]?.name;
+        const albumArt = firstTrack?.album?.images?.[0]?.url;
 
-                <h1>{track.name}</h1>
-              </div>
+        return (
+          <div key={artistId} className={styles.artistSection}>
+            <h2>{artistName}</h2>
 
-              <pre> {JSON.stringify(track, null, 2)}</pre>
-            </div>
-          );
-        })}
-      </div>
+            {albumArt && (
+              <Image
+                src={albumArt}
+                width={100}
+                height={100}
+                alt={`${artistName} album art`}
+              />
+            )}
+
+            <ul>
+              {tracks.map((track) => (
+                <li key={track.id}>{track.name}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
 }

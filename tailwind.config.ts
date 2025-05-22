@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+        "spin-vinyl": "spin 10s linear infinite",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

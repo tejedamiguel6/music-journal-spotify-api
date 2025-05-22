@@ -5,6 +5,7 @@ import { RichTextHtml } from "@/app/lib/utils/rich-text-to-html";
 import RenderElements from "@/app/components/render-elements/render-elements";
 import Image from "next/image";
 import AlbumImage from "@/app/components/album-image/album-image";
+import SimilarArtistImage from "@/app/components/album-image/similar-artist-album-image";
 
 interface PageProps {
   params: {
@@ -16,19 +17,17 @@ interface PageProps {
 }
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const { slug } = params;
-  const { id } = searchParams;
+  const { id: itemId } = searchParams;
 
-  console.log(id, "this ID");
+  // console.log(itemId, "this ID");
 
   const query = `
-  query MUSIC_ITEM_PAGE($recentlyLiked: String!) {
-     pageMusicCollection(where: {recentlyLiked: $recentlyLiked}) {
+  query MUSIC_ITEM_PAGE($recentlyLikedId: String!) {
+  pageMusicCollection(where: {recentlyLikedId: $recentlyLikedId}) {
     items {
       title
       slug
-      itemType
-      recentlyLiked
+      itemJsonData
       mood
       outfitVibe {
         url
@@ -38,35 +37,34 @@ export default async function Page({ params, searchParams }: PageProps) {
       firstImpressionReview {
         json
       }
+      similarArtistsCollection {
+        items {
+          name
+          similarArtists
+        }
+      }
     }
   }
-  }
+}
 `;
 
   const contentfulData = await fetchGraphQL(query, {
-    recentlyLiked: id,
+    recentlyLikedId: itemId,
   });
 
-  // console.log("this is CONTENTFUL@@@@->", commentIdFromContentful);
-
   const contentfultext =
-    contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.json
-      .content;
+    contentfulData.data?.pageMusicCollection.items[0]?.firstImpressionReview
+      .json.content;
 
-  if (!id) {
+  if (!itemId) {
     return notFound();
   }
-
-  const artistData = await getArtistData(id);
-
-  if (!artistData) {
-    return notFound();
-  }
-
-  const { pageMusicCollection } = contentfulData.data;
-  // console.log(pageMusicCollection, "siii!");
+  const { pageMusicCollection } = contentfulData?.data;
 
   const outfitVibe = pageMusicCollection?.items[0]?.outfitVibe?.url;
+
+  const itemJsonData = pageMusicCollection.items[0]?.itemJsonData;
+
   return (
     <div>
       <div className="grid grid-cols-[1fr_2fr_1fr] gap-4 min-h-screen items-center">
@@ -81,10 +79,24 @@ export default async function Page({ params, searchParams }: PageProps) {
           ) : null}
         </div>
 
-        <AlbumImage artistData={artistData} />
+        <AlbumImage artistData={itemJsonData} text="Top Artist" />
         <RenderElements elements={contentfultext} />
-        <h1>Favorite album:</h1>
       </div>
+
+      {pageMusicCollection.items[0]?.similarArtistsCollection.items[0]?.similarArtists.map(
+        (artist) => {
+          // console.log("MIGUEL", artist);
+
+          return (
+            <div>
+              <AlbumImage
+                artistData={artist}
+                text="Personally Curated Similar Artists:"
+              />
+            </div>
+          );
+        }
+      )}
     </div>
   );
 }

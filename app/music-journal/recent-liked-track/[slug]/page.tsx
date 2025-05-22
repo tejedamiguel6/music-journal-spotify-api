@@ -10,16 +10,11 @@ type PageProps = {
 };
 
 export default async function Page({ params, searchParams }: PageProps) {
-  console.log(params);
-
   const { slug } = params;
   const { id } = searchParams;
-  console.log(slug, "you got the slug");
-  console.log(id, "youID)");
 
   const trackData = await getTrackData(id);
 
-  console.log("MIGUEL", trackData);
 
   return (
     <div>
@@ -32,7 +27,6 @@ export default async function Page({ params, searchParams }: PageProps) {
       <h3>Artists:</h3>
       {trackData.artists?.length >= 1 &&
         trackData?.artists?.map((artist) => {
-          console.log("Artist:", artist);
           return <div key={artist.id}>{artist.name}</div>;
         })}
     </div>

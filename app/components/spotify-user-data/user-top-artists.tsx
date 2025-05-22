@@ -25,9 +25,10 @@ export default async function UserTopArtists({
   `;
 
   const { data } = await fetchGraphQL(query);
+
   return (
     <div className={`${styles.gridContainer} ${className || ""}`}>
-      {data.blockTopArtistsCollection.items[0].topArtists.items
+      {data.blockTopArtistsCollection.items[1].topArtists.items
         ?.slice(0, limit)
         .map((item, index) => {
           const slug = createSlug(item.name);
@@ -36,7 +37,7 @@ export default async function UserTopArtists({
               <Link href={`/music-journal/top-items/${slug}?id=${item.id}`}>
                 <Image
                   className={styles.albumImage}
-                  src={item.images[0].url}
+                  src={item.images[0]?.url}
                   width={item.images[0].width}
                   height={item.images[0].height}
                   alt={`album art cover for track ${item.name}`}

@@ -4,9 +4,9 @@ export function RichTextHtml(document) {
   const paragraph = document?.map((node) => {
     if (node?.nodeType === "paragraph") {
       return node?.content?.map((text) => {
-        console.log("Contetnful text from rte===>", text);
+        // console.log("Contetnful text from rte===>", text);
         const boldText = text?.marks?.some((mark) => mark.type === "bold");
-        console.log("is this bold", boldText);
+        // console.log("is this bold", boldText);
         return (
           <>
             {boldText ? (

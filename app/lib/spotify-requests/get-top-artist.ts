@@ -5,6 +5,13 @@ export async function getUserTopItem(endpoint: string, limit: number) {
   const cookieStore = await cookies();
   let accessToken = cookieStore.get("spotify_access_token")?.value;
 
+  let overrideLimit = 60;
+
+  if (endpoint === "tracks") {
+    limit = overrideLimit;
+  }
+  console.log(`[getUserTopItem] Fetching ${endpoint} with limit = ${limit}`);
+
   let response = await fetch(
     `https://api.spotify.com/v1/me/top/${endpoint}?limit=${limit}`,
     {

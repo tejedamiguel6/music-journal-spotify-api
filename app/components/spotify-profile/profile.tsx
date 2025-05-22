@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getSpotifyData } from "@/app/lib/spotify-requests/spotify";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
 
-export default async function Profile({}) {
+export default async function Profile() {
   const query = `
   query GET_SPOTIFY_PROFILE {
   blockProfileDataCollection {
@@ -17,8 +17,6 @@ export default async function Profile({}) {
   `;
 
   const data = await fetchGraphQL(query);
-
-  console.log("this is the profile", data.data.blockProfileDataCollection);
 
   try {
     return (

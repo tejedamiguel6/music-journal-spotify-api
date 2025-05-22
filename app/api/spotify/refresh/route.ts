@@ -5,11 +5,7 @@ export async function GET() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("spotify_refresh_token")?.value;
 
-  console.log("Refresh attempt - token present:", !!refreshToken);
-  console.log(
-    "Refresh attempt - token preview:",
-    refreshToken ? `${refreshToken.substring(0, 10)}...` : null
-  );
+  // Refresh attempt logs removed for security
 
   if (!refreshToken) {
     return NextResponse.json({ error: "No refresh token found" });
@@ -30,7 +26,7 @@ export async function GET() {
     });
 
     const data = await response.json();
-    console.log("Refresh response:", data);
+    // Refresh response log removed for security
 
     if (!response.ok) {
       return NextResponse.json(
@@ -61,7 +57,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       expires_in: data.expires_in,
-      access_token: data.access_token,
+      // access_token removed from response for security
     });
   } catch (error) {
     console.error("Error refreshing token:", error);
