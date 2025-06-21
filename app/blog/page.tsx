@@ -1,5 +1,6 @@
 import { fetchGraphQL } from "../lib/contentful-api";
 import BlogImages from "../components/blog-images/BlogImages";
+import styles from "./page.module.css";
 
 export default async function Home() {
   const query = `
@@ -37,7 +38,7 @@ export default async function Home() {
 
   return (
     <div>
-      <h1 className="text-center ">Visual Diary!</h1>
+      <h1 className={styles.title}>Visual Diary!</h1>
       <div>
         <div>
           {data.pageCollection?.items?.map((sectionCollections) =>

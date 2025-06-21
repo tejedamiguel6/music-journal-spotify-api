@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Syne } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/navigation/navigation";
+
+const syneFont = Syne({
+  subsets: ["latin"],
+  weight: "600",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`mx-auto container px-4 ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`mx-auto container px-4 ${syneFont.className} antialiased`}
       >
         <Navigation />
         {children}

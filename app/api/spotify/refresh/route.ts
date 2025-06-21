@@ -51,6 +51,13 @@ export async function GET() {
         maxAge: 30 * 24 * 60 * 60, // 30 days
         path: "/",
       });
+
+      // NEW — tell the Go backend
+      await fetch("http://localhost:8080/save-refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: data.refresh_token }),
+      }).catch(console.error);
     }
 
     // Always return success response whether refresh token was updated or not

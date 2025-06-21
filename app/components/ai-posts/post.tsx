@@ -1,5 +1,6 @@
 "use client";
 import { RichTextHtml } from "@/app/lib/utils/rich-text-to-html";
+import RenderElements from "../render-elements/richt-text";
 import styles from "./post.module.css";
 
 import { useState, useEffect } from "react";

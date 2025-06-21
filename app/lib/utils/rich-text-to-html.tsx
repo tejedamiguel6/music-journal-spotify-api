@@ -2,6 +2,7 @@ export function RichTextHtml(document) {
   // console.log("nodes=||||=>", document);
 
   const paragraph = document?.map((node) => {
+    // console.log("get ASSET FROM NODE", node);
     if (node?.nodeType === "paragraph") {
       return node?.content?.map((text) => {
         // console.log("Contetnful text from rte===>", text);
@@ -19,6 +20,10 @@ export function RichTextHtml(document) {
           </>
         );
       });
+    }
+
+    // asset type
+    if (node?.nodeType === "embedded-asset-block") {
     }
 
     if (node?.nodeType === "unordered-list") {

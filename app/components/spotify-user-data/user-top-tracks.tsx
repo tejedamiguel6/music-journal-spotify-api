@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./user-top-track.module.css";
-import createSlug from "@/app/lib/utils/create-slug";
 
 export default function TopTracks({ userTopItemsData }) {
+  const [groupedArtists, setGroupedArtists] = useState({});
+  const [expandedMap, setExpandedMap] = useState({});
+
   const block = userTopItemsData?.blockTopArtistsCollection?.items?.[0];
   const tracks = block?.topArtists?.items ?? [];
-
-  const [groupedArtists, setGroupedArtists] = useState({});
 
   useEffect(() => {
     if (!Array.isArray(tracks) || tracks.length === 0) return;
@@ -28,12 +28,21 @@ export default function TopTracks({ userTopItemsData }) {
     setGroupedArtists(grouped);
   }, [tracks]);
 
+  const toggleExpanded = (artistId) => {
+    setExpandedMap((prev) => ({
+      ...prev,
+      [artistId]: !prev[artistId],
+    }));
+  };
+
   return (
     <div className={styles.tracksContainer}>
       {Object.entries(groupedArtists).map(([artistId, tracks]) => {
         const firstTrack = tracks[0];
         const artistName = firstTrack?.artists[0]?.name;
         const albumArt = firstTrack?.album?.images?.[0]?.url;
+        const isExpanded = expandedMap[artistId];
+        const visibleTracks = isExpanded ? tracks : tracks.slice(0, 5);
 
         return (
           <div key={artistId} className={styles.artistSection}>
@@ -41,6 +50,7 @@ export default function TopTracks({ userTopItemsData }) {
 
             {albumArt && (
               <Image
+                className={styles.albumArtImage}
                 src={albumArt}
                 width={100}
                 height={100}
@@ -48,11 +58,26 @@ export default function TopTracks({ userTopItemsData }) {
               />
             )}
 
-            <ul>
-              {tracks.map((track) => (
+            <ul
+              className={`${styles.trackItemContainer} ${
+                expandedMap[artistId] ? styles.expanded : ""
+              }`}
+            >
+              {visibleTracks.map((track) => (
                 <li key={track.id}>{track.name}</li>
               ))}
             </ul>
+
+            {tracks.length > 4 && (
+              <button
+                className={styles.toggleButton}
+                onClick={() => toggleExpanded(artistId)}
+              >
+                {expandedMap[artistId]
+                  ? "Show Less"
+                  : `Show ${tracks.length - 5} more`}
+              </button>
+            )}
           </div>
         );
       })}

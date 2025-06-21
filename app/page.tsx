@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 
 import Profile from "./components/spotify-profile/profile";
 import UserTopArtists from "./components/spotify-user-data/user-top-artists";
+import styles from "./page.module.css";
 
 export default async function Page() {
   const query = `
@@ -50,26 +51,30 @@ export default async function Page() {
     <>
       <AiCardImages aiImageData={pageCollection} />
 
-      <div className="flex justify-between">
-        <div className=" p-10">
-          <h1 className="text-2xl  font-bold">MIGUEL TEJEDA</h1>
-          <p className="w-5/6">
+      <div className={styles.header}>
+        <div className={styles.intro}>
+          <h1 className={styles.title}>MIGUEL TEJEDA</h1>
+          <p className={styles.description}>
             this is space for me where i can give it a shot at technical
             writing, art, bloggin, and learning new tech
           </p>
         </div>
 
-        <p className="w-3/12  ">SOCIAL MEDIA ICONS HERE</p>
+        <p className={styles.socialSection}>SOCIAL MEDIA ICONS HERE</p>
       </div>
 
       {/* start spotify  */}
-      <div className="grid [grid-template-columns:repeat(6,1fr)]">
-        <div className="col-span-2">
+      <div className={styles.spotifyGrid}>
+        <div className={styles.profileSection}>
           <Profile />
         </div>
 
-        <div className="col-span-4">
-          <UserTopArtists limit={2} className="grid grid-cols-2 mt-8 gap-4" />
+        <div className={styles.artistsSection}>
+          <UserTopArtists limit={2} className={styles.artistsGrid} />
+        </div>
+
+        <div>
+          <h1>Technical writing section here</h1>
         </div>
       </div>
     </>

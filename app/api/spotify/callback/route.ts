@@ -56,13 +56,27 @@ export async function GET(request) {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });
+
+      try {
+        // Send refresh token to Go backend
+        await fetch("http://localhost:8080/save-refresh", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: tokenData.refresh_token }),
+        });
+      } catch (error) {
+        console.error("Error saving refresh token to Go backend:", error);
+      }
     }
 
     // Token data log removed for security
 
     // Use environment variable for redirect URL instead of hardcoded value
     return NextResponse.redirect(
-      new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000/", request.url)
+      new URL(
+        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000/",
+        request.url
+      )
     );
   } catch (error) {
     console.error("Authentication error:", error);

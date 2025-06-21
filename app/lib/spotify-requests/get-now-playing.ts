@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic"; // Ensures the function is always fresh
+
 export default async function getCurrentlyPlaying() {
   const cookieStore = await cookies();
   let accessToken = cookieStore.get("spotify_access_token")?.value;

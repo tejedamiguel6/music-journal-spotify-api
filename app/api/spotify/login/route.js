@@ -48,7 +48,7 @@ export async function GET() {
   const params = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
-    scope: "user-read-private user-read-email user-library-read user-top-read user-read-currently-playing",    
+    scope: "user-read-private user-read-email user-library-read user-top-read user-read-currently-playing user-read-recently-played",    
     redirect_uri: redirectUri,
     state: state,
     code_challenge_method: "S256",

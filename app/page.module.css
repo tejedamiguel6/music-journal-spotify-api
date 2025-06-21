@@ -1,0 +1,41 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.intro {
+  padding: 2.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.description {
+  width: 83.333333%;
+}
+
+.socialSection {
+  width: 25%;
+}
+
+.spotifyGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.profileSection {
+  grid-column: span 2;
+}
+
+.artistsSection {
+  grid-column: span 4;
+}
+
+.artistsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 2rem;
+  gap: 1rem;
+}

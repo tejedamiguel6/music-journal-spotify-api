@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.scdn.co", // Spotify
       },
+      {
+        protocol: "https",
+        hostname: "assets.ctfassets.net", // mp3
+      },
     ],
   },
 };
