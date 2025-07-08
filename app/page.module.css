@@ -23,11 +23,26 @@
 .spotifyGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+ 
 }
 
 .profileSection {
   grid-column: span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
+  h1 {
+    color: red;
+    font-size: 3rem;
+  
+    
+  }
+ 
 }
+
+
 
 .artistsSection {
   grid-column: span 4;

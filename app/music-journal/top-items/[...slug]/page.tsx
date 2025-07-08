@@ -30,6 +30,8 @@ export default async function Page({ params, searchParams }: PageProps) {
       slug
       itemJsonData
       mood
+      fontType
+      backgroundColor
       outfitVibe {
         url
         width
@@ -83,9 +85,13 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const itemJsonData = pageMusicCollection.items[0]?.itemJsonData;
 
+  console.log("this is background color", pageMusicCollection);
+
+  const backgroundColor = pageMusicCollection.items[0]?.backgroundColor;
+
   return (
     <>
-      <div>
+      <div style={{ backgroundColor: backgroundColor ?? undefined }}>
         <div className={styles.gridLayout}>
           <div className="">
             {outfitVibe ? (
@@ -97,7 +103,7 @@ export default async function Page({ params, searchParams }: PageProps) {
               />
             ) : null}
           </div>
-          <AlbumImage artistData={itemJsonData} text="Top Artist" />
+          <AlbumImage artistData={itemJsonData} text="❤️MOOD🖤" />
           <RichText
             documents={
               contentfulData.data.pageMusicCollection.items[0]
@@ -110,7 +116,6 @@ export default async function Page({ params, searchParams }: PageProps) {
             )}
           />
         </div>
-
         {pageMusicCollection.items[0]?.similarArtistsCollection.items[0]?.similarArtists.map(
           (artist) => {
             // console.log("MIGUEL", artist);

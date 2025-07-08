@@ -66,7 +66,9 @@ export default async function Page() {
       {/* start spotify  */}
       <div className={styles.spotifyGrid}>
         <div className={styles.profileSection}>
-          <Profile />
+          <Link href="/music-journal">
+            <h1>Music Journal</h1>
+          </Link>
         </div>
 
         <div className={styles.artistsSection}>

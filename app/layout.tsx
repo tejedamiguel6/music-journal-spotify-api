@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Syne } from "next/font/google";
+import { Geist, Geist_Mono, Syne, Almendra } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/navigation/navigation";
 
@@ -8,14 +8,9 @@ const syneFont = Syne({
   weight: "600",
 });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const almendraFont = Almendra({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "700",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`mx-auto container px-4 ${syneFont.className} antialiased`}
+        className={`mx-auto container px-4 ${almendraFont.className} antialiased`}
       >
         <Navigation />
         {children}

@@ -1,7 +1,22 @@
 .container {
   max-width: 1024px;
   margin: 0 auto;
+  padding-top: 1.5rem;
+
+ 
 }
+
+.subTitle {
+  font-size: 3rem;;
+  color: pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+
+}
+
+
 
 .header {
   display: flex;

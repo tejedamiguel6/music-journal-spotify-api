@@ -44,6 +44,7 @@ export default async function Page() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Music JOURNAL</h1>
+          <h1 className={styles.subTitle}>Top Artist according to Spotify🙄</h1>
 
           <NowPlaying tracksFromDB={tracksFromDB} />
         </div>
@@ -51,10 +52,7 @@ export default async function Page() {
         <div className={styles.content}>
           <div>
             {/* <RecentlyLked savedTracksData={savedTracksData} /> */}
-            <UserTopArtists
-              limit={8}
-              className={styles.artistsGrid}
-            />
+            <UserTopArtists limit={8} className={styles.artistsGrid} />
           </div>
         </div>
         <div className={styles.imageContainer}>
