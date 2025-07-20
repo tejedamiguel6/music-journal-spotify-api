@@ -1,3 +1,5 @@
+// can delete file since we are no longer getting cookies and authenticating
+
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -13,7 +15,7 @@ export default async function getCurrentlyPlaying() {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 
   if (response.status === 401) {
@@ -24,14 +26,14 @@ export default async function getCurrentlyPlaying() {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     if (!refreshResponse.ok) {
       const errorData = await refreshResponse.json();
       return NextResponse.json(
         { error: "Failed to refresh token: " + errorData.error },
-        { status: refreshResponse.status }
+        { status: refreshResponse.status },
       );
     }
 
@@ -45,7 +47,7 @@ export default async function getCurrentlyPlaying() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     console.log("response from fetch GET-TOP-ARTIST", response);

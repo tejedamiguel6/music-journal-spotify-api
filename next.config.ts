@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "assets.ctfassets.net", // mp3
       },
+      { protocol: "https", hostname: "example.com" },
     ],
   },
 };

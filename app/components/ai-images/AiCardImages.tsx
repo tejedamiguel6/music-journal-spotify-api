@@ -2,12 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import styles from "./ai-images.module.css";
 
 export default function AiCardImages({ aiImageData }) {
-  const [imageSizes, setImageSizes] = useState({});
-
   // Check if there's valid data to work with
   if (!aiImageData?.items?.[0]?.sectionsCollection?.items) {
     return <div>No AI images available</div>;
@@ -38,15 +35,6 @@ export default function AiCardImages({ aiImageData }) {
               height={media.height || 200}
               src={media.url}
               alt={media.title || "AI Generated Image"}
-              onLoadingComplete={(img) => {
-                setImageSizes((prev) => ({
-                  ...prev,
-                  [index]: {
-                    width: img.naturalWidth,
-                    height: img.naturalHeight,
-                  },
-                }));
-              }}
             />
           </Link>
         );

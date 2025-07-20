@@ -7,6 +7,7 @@ export async function fetchGraphQL(query: string, variables: any = {}) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
     },
+    next: { revalidate: 60 }, // revalidate every 60 seconds
     body: JSON.stringify({ query, variables }),
   }).then((response) => response.json());
 }

@@ -23,4 +23,4 @@ export default function formatDayAndTime(isoString) {
 
 // Example usage:
 const formatted = formatDayAndTime("2025-04-04T04:30:35Z");
-console.log(formatted); // e.g., "Friday, 4:30 AM"
+console.log(formatted);

@@ -19,20 +19,20 @@ export default async function getArtistData(trackId: string) {
       {
         method: "GET",
         credentials: "include",
-      }
+      },
     );
 
     if (!refreshResponse.ok) {
       const errorData = await refreshResponse.json();
       return NextResponse.json(
         { error: "Failed to refresh token: " + errorData.error },
-        { status: refreshResponse.status }
+        { status: refreshResponse.status },
       );
     }
 
     const refreshData = await refreshResponse.json();
     accessToken = refreshData.access_token;
-    console.log("New access token: FROM GET-TOP-ARTIST FILE", accessToken);
+    // console.log("New access token: FROM GET-TOP-ARTIST FILE", accessToken);
 
     response = await fetch(`https://api.spotify.com/v1/artists/${trackId}`, {
       headers: {
@@ -40,7 +40,7 @@ export default async function getArtistData(trackId: string) {
       },
     });
 
-    console.log("response from fetch GET-TOP-ARTIST", response);
+    // console.log("response from fetch GET-TOP-ARTIST", response);
   }
   return response.json();
 }

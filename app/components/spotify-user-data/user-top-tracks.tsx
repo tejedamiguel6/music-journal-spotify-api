@@ -36,51 +36,55 @@ export default function TopTracks({ userTopItemsData }) {
   };
 
   return (
-    <div className={styles.tracksContainer}>
-      {Object.entries(groupedArtists).map(([artistId, tracks]) => {
-        const firstTrack = tracks[0];
-        const artistName = firstTrack?.artists[0]?.name;
-        const albumArt = firstTrack?.album?.images?.[0]?.url;
-        const isExpanded = expandedMap[artistId];
-        const visibleTracks = isExpanded ? tracks : tracks.slice(0, 5);
+    <div className={styles.container}>
+      <div className={styles.tracksContainer}>
+        {Object.entries(groupedArtists).map(([artistId, tracks]) => {
+          const firstTrack = tracks[0];
+          const artistName = firstTrack?.artists[0]?.name;
+          const albumArt = firstTrack?.album?.images?.[0]?.url;
+          const isExpanded = expandedMap[artistId];
+          const visibleTracks = isExpanded ? tracks : tracks.slice(0, 5);
 
-        return (
-          <div key={artistId} className={styles.artistSection}>
-            <h2>{artistName}</h2>
+          return (
+            <div key={artistId} className={styles.artistSection}>
+              <div className={styles.artistsTitle}>
+                <h2>{artistName}</h2>
+              </div>
 
-            {albumArt && (
-              <Image
-                className={styles.albumArtImage}
-                src={albumArt}
-                width={100}
-                height={100}
-                alt={`${artistName} album art`}
-              />
-            )}
+              {albumArt && (
+                <Image
+                  className={styles.albumArtImage}
+                  src={albumArt}
+                  width={100}
+                  height={100}
+                  alt={`${artistName} album art`}
+                />
+              )}
 
-            <ul
-              className={`${styles.trackItemContainer} ${
-                expandedMap[artistId] ? styles.expanded : ""
-              }`}
-            >
-              {visibleTracks.map((track) => (
-                <li key={track.id}>{track.name}</li>
-              ))}
-            </ul>
-
-            {tracks.length > 4 && (
-              <button
-                className={styles.toggleButton}
-                onClick={() => toggleExpanded(artistId)}
+              <ul
+                className={`${styles.trackItemContainer} ${
+                  expandedMap[artistId] ? styles.expanded : ""
+                }`}
               >
-                {expandedMap[artistId]
-                  ? "Show Less"
-                  : `Show ${tracks.length - 5} more`}
-              </button>
-            )}
-          </div>
-        );
-      })}
+                {visibleTracks.map((track) => (
+                  <li key={track.id}>{track.name}</li>
+                ))}
+              </ul>
+
+              {tracks.length > 4 && (
+                <button
+                  className={styles.toggleButton}
+                  onClick={() => toggleExpanded(artistId)}
+                >
+                  {expandedMap[artistId]
+                    ? "Show Less"
+                    : `Show ${tracks.length - 5} more`}
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

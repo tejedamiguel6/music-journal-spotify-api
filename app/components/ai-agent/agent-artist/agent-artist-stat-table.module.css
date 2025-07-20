@@ -1,0 +1,98 @@
+.container {
+    padding-top: 2.25rem;
+}
+
+.headline {
+    text-align: center;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+    padding-top: 50px;
+}
+
+.artistName {
+    font-weight: 600;
+    color: #2563eb;
+}
+
+.statBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat {
+    padding: 0.5rem 0.75rem;
+    background-color: #f3f4f6;
+    border-radius: 0.25rem;
+    color: #000000;
+}
+
+.statLabel {
+    color: #6b7280;
+}
+
+.statValue {
+    font-weight: 500;
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.table {
+    min-width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
+
+.tableHeader {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.th {
+    padding: 0.5rem;
+    text-align: left;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.thEmpty {
+    padding: 0.5rem;
+}
+
+.tableRow {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.td {
+    padding: 0.5rem;
+}
+
+.tdCenter {
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.albumCover {
+    border-radius: 0.25rem;
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+}
+
+.errorText {
+    color: #dc2626;
+}
+
+.noDataText {
+    color: inherit;
+}

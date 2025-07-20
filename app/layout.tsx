@@ -3,11 +3,6 @@ import { Geist, Geist_Mono, Syne, Almendra } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/navigation/navigation";
 
-const syneFont = Syne({
-  subsets: ["latin"],
-  weight: "600",
-});
-
 const almendraFont = Almendra({
   subsets: ["latin"],
   weight: "700",
@@ -26,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`mx-auto container px-4 ${almendraFont.className} antialiased`}
+        className={`${almendraFont.className} antialiased container mx-auto `}
       >
         <Navigation />
         {children}

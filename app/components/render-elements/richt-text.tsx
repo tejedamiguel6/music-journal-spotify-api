@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { BLOCKS } from "@contentful/rich-text-types";
+import { BLOCKS, MARKS } from "@contentful/rich-text-types";
 
 type Props = {
   document?: any;
@@ -8,14 +8,13 @@ type Props = {
 };
 
 export default function RichText({ documents, assetMap }: Props) {
+  // console.log("get the code", documents);
   if (!documents) return null;
-  // 💡 Logs incoming rich text
-  console.log(documents, "these do");
 
   // 🔁 Recursively inject resolved assets into the rich text document
   function injectAssetsIntoRichText(
     document: any,
-    assetMap?: Record<string, any>
+    assetMap?: Record<string, any>,
   ): any {
     if (
       document?.nodeType === "embedded-asset-block" &&
@@ -36,7 +35,7 @@ export default function RichText({ documents, assetMap }: Props) {
     // 📚 Recursively walk child nodes
     if (Array.isArray(document?.content)) {
       document.content = document.content.map((child) =>
-        injectAssetsIntoRichText(child, assetMap)
+        injectAssetsIntoRichText(child, assetMap),
       );
     }
 
@@ -46,11 +45,34 @@ export default function RichText({ documents, assetMap }: Props) {
   // 💧 Hydrate rich text with asset references
   const hydratedDocument = injectAssetsIntoRichText(
     JSON.parse(JSON.stringify(documents)), // deep clone to avoid mutation bugs
-    assetMap
+    assetMap,
   );
 
   // Render rules for Contentful rich text
   const renderOptions = {
+    renderMark: {
+      [MARKS.BOLD]: (text: string) => <strong>{text}</strong>,
+      [MARKS.ITALIC]: (text: string) => <em>{text}</em>,
+      [MARKS.UNDERLINE]: (text: string) => <u>{text}</u>,
+      [MARKS.CODE]: (text: string) => {
+        return (
+          <div className=" my-6  rounded-md overflow-hidden border border-[#2c2c2c] shadow-sm">
+            <div className="flex items-center gap-2 px-3 py-2 bg-[#2d2d2d] border-b border-[#3c3c3c]">
+              <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+              <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+            </div>
+
+            {/* Code Block */}
+            <pre className="bg-[#1e1e1e] text-sm text-amber-300 p-4 font-mono whitespace-pre overflow-x-auto">
+              <code>{text}</code>
+            </pre>
+          </div>
+        );
+      },
+    },
+    renderText: (text: string) => <span className="">{text}</span>,
+
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
         <div>

@@ -1,70 +1,83 @@
+/* .container {
+    width: auto;
+    border: 1px solid red;
+} */
+
 .tracksContainer {
     display: flex;
-    width: 50%;
-    flex-direction: column;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: auto;
+    /* flex-direction: column; */
     gap: 2rem;
+
     padding: 2rem;
     /* background: #111;  */
     color: #fff;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     /* border: 1px solid red; */
-  }
-  
-  .artistSection {
+}
+
+.artistSection {
+    width: 30%;
+
     background-color: #1c1c1c;
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-  
+
     &:hover {
-      background-color: #222;
+        background-color: #222;
     }
-  
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-      /* color: #ffd369; */
-    }
-  }
+}
 
-  
-  .albumArt {
+.artistsTitle {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    /* color: #ffd369; */
+}
+
+.albumArt {
     margin-bottom: 1rem;
-   
-  }
+}
 
-  .albumArtImage {
+.albumArtImage {
     border-radius: 8px;
     border: 2px solid #333;
     display: block;
-  }
-  
-  .trackItemContainer {
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.trackItemContainer {
     list-style: none;
     padding: 0;
     margin: 1rem 0;
     max-height: 300px;
     overflow: hidden;
     transition: max-height 0.4s ease;
-  
+
     &.expanded {
-      max-height: 1000px;
+        max-height: 1000px;
     }
-  
+
     li {
-      padding: 0.35rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.95rem;
-      color: #ddd;
-  
-      &:last-child {
-        border-bottom: none;
-      }
+        padding: 0.35rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.95rem;
+        color: #ddd;
+
+        &:last-child {
+            border-bottom: none;
+        }
     }
-  }
-  
-  .toggleButton {
+}
+
+.toggleButton {
     background-color: transparent;
     border: 1px solid #ffd369;
     color: #ffd369;
@@ -73,9 +86,9 @@
     cursor: pointer;
     font-size: 0.9rem;
     transition: background 0.3s ease;
-  
+
     &:hover {
-      background-color: #ffd369;
-      color: #111;
+        background-color: #ffd369;
+        color: #111;
     }
-  }
+}

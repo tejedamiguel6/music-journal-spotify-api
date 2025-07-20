@@ -1,0 +1,13 @@
+.container {
+    /* border: 1px solid #ccc; */
+    margin: 0 auto;
+
+    padding-top: 5rem;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #43344;
+}
