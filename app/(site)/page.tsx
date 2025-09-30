@@ -1,12 +1,12 @@
-import { fetchGraphQL } from "./lib/contentful-api";
+import { fetchGraphQL } from "../lib/contentful-api";
 import Image from "next/image";
 import Link from "next/link";
-import AiCardImages from "./components/ai-images/AiCardImages";
-import Navigation from "./components/navigation/navigation";
+import AiCardImages from "../components/ai-images/AiCardImages";
+import Navigation from "../components/navigation/navigation";
 import { cookies } from "next/headers";
 
-import Profile from "./components/spotify-profile/profile";
-import UserTopArtists from "./components/spotify-user-data/user-top-artists";
+import Profile from "../components/spotify-profile/profile";
+import UserTopArtists from "../components/spotify-user-data/user-top-artists";
 import styles from "./page.module.css";
 
 export default async function Page() {

@@ -1,0 +1,39 @@
+.container {
+  /* border: 3px solid blue;  */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 90px;
+ 
+}
+
+.title {
+  text-align: center;
+  /* border: 1px solid red; */
+  padding: 10px;
+  font-size: x-large
+}
+
+.genres {
+    border:1px solid #afaced;
+
+    padding: 0 10px 0 10px; 
+}
+
+
+.button {
+  text-align: center;
+  margin-top: -70px;
+
+ button {
+    border: 1px solid #5d350f;
+    padding: 5px;
+    border-radius: 10px;
+   
+ }
+}
+
+ .button:hover {
+    color: red; 
+  }

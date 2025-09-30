@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test-db": "tsx -r tsconfig-paths/register script/test-db.ts"
+    "test-db": "tsx -r tsconfig-paths/register script/test-db.ts",
+    "cf-export": "npx dotenv-cli -- contentful space export --management-token $CONTENTFUL_MANAGEMENT_TOKEN --space-id k64k3kt74fyv --environment-id master --content-file export.json --export-dir contentful-export --download-assets",
+    "check-env": "npx dotenv-cli -- sh -c 'echo $CONTENTFUL_ACCESS_TOKEN && echo $CONTENTFUL_SPACE_ID'",
+    "cf-generate-types": "cf-content-types-generator contentful-export/export.json --out types/contentful"
   },
   "dependencies": {
     "@contentful/node-apps-toolkit": "^3.13.0",
@@ -19,6 +22,7 @@
     "clsx": "^2.1.1",
     "contentful-migration": "^4.27.0",
     "langchain": "^0.3.29",
+    "lucide-react": "^0.525.0",
     "motion": "^12.23.6",
     "next": "15.1.7",
     "node-cache": "^5.1.2",
@@ -34,7 +38,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cf-content-types-generator": "^2.16.1",
     "dotenv": "^16.6.1",
+    "dotenv-cli": "^9.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",

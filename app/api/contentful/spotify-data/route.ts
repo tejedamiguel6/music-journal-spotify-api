@@ -22,7 +22,6 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type") ?? "recent-tracks";
 
-    // 👉 read cookie straight from the NextRequest
     const accessToken = request.cookies.get("spotify_access_token")?.value;
     if (!accessToken) {
       return buildResponse(
