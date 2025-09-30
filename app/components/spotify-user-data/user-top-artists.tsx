@@ -28,7 +28,7 @@ export default async function UserTopArtists({
 
   return (
     <div className={`${styles.gridContainer} ${className || ""}`}>
-      {data.blockTopArtistsCollection.items[1].topArtists.items
+      {data.blockTopArtistsCollection.items[0].topArtists.items
         ?.slice(0, limit)
         .map((item, index) => {
           // console.log(item, "<----this item");

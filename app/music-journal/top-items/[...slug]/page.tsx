@@ -8,6 +8,8 @@ import AlbumImage from "@/app/components/album-image/album-image";
 // import SimilarArtistImage from "@/app/components/album-image/similar-artist-album-image";
 import styles from "./page.module.css";
 
+import NowPlaying from "@/app/components/spotify-now-playing/now-playing";
+
 import ArtistStatsTable from "@/app/components/ai-agent/agent-artist/agent-artist-stat-table";
 import Loading from "./loading";
 
@@ -129,19 +131,12 @@ export default async function Page({ params, searchParams }: PageProps) {
     return notFound();
   }
   const { pageMusicCollection } = contentfulData?.data;
-
   // console.log("get the all data===>", pageMusicCollection);
-
   const outfitVibe = pageMusicCollection?.items[0]?.outfitVibe?.url;
-
   const itemJsonData = pageMusicCollection.items[0]?.itemJsonData;
-
   // console.log("this itemJsonData", itemJsonData.name);
-
   const backgroundColor = pageMusicCollection.items[0]?.backgroundColor;
-
   const { developerLogsCollection } = pageMusicCollection.items?.[0] ?? {};
-
   // console.log("developerLogsCollection", developerLogsCollection);
 
   return (
@@ -150,8 +145,10 @@ export default async function Page({ params, searchParams }: PageProps) {
         key={itemJsonData?.id}
         style={{ backgroundColor: backgroundColor ?? undefined }}
       >
+        {/* <NowPlaying /> */}
+
         <div className={styles.gridLayout} key={itemJsonData?.id}>
-          <div className="">
+          <div className={styles.outfitVibe}>
             {outfitVibe ? (
               <Image
                 src={outfitVibe}
@@ -162,17 +159,21 @@ export default async function Page({ params, searchParams }: PageProps) {
             ) : null}
           </div>
           <AlbumImage artistData={itemJsonData} text="❤️MOOD🖤" />
-          <RichText
-            documents={
-              contentfulData.data.pageMusicCollection.items[0]
-                ?.firstImpressionReview.json
-            }
-            assetMap={Object.fromEntries(
-              contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.links.assets.block.map(
-                (asset) => [asset.sys.id, asset],
-              ) || [],
-            )}
-          />
+          <div >
+
+            <RichText
+              documents={
+                contentfulData.data.pageMusicCollection.items[0]
+                  ?.firstImpressionReview.json
+              }
+              assetMap={Object.fromEntries(
+                contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.links.assets.block.map(
+                  (asset) => [asset.sys.id, asset],
+                ) || [],
+              )}
+            />
+          </div>
+
         </div>
 
         {/* start dev blog notes  */}
@@ -180,18 +181,18 @@ export default async function Page({ params, searchParams }: PageProps) {
           const image = item.screenshotsCollection.items.map((item) => item)
           return (
             <>
-              <div className="text-center ">
+              <div className={styles.devSummaryHeader}>
                 <h1>dev summary</h1>
-                <h1 className="text-3xl">{item.title}</h1>>
-                <h3>Concept: --> {item.concept}</h3>
-                <p className="p-4 text-fuchsia-400" >Programming Language: ----> {item.programmingLanguage}</p>
+                <h1 className={styles.devTitle}>{item.title}</h1>>
+                <h3 className={styles.devConcept}>Concept: --> {item.concept}</h3>
+                <p className={styles.programmingLanguage}>Programming Language: ----> {item.programmingLanguage}</p>
               </div>
 
-              <div className="flex flex-col items-center justify-center">
+              <div className={styles.devImageContainer}>
                 {image?.slice(0, 1).map((item) => (
                   <img
                     key={item.url}
-                    className="w-3/6 h-auto rounded-lg border border-fuchsia-400"
+                    className={styles.devImage}
                     src={item.url}
                     alt={item.title}
                     width={item.width}
@@ -199,7 +200,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                   />
                 ))}
 
-                <Link href={`/devblog/${item.slug}`} className="mt-2 text-fuchsia-500 hover:underline">
+                <Link href={`/devblog/${item.slug}`} className={styles.readMoreLink}>
                   Read More!
                 </Link>
               </div>

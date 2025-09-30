@@ -4,7 +4,39 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./ai-images.module.css";
 
-export default function AiCardImages({ aiImageData }) {
+// GraphQL response types (different from Contentful SDK types)
+interface GraphQLAiImageSection {
+  __typename: string;
+  title: string;
+  slug: string;
+  aiMediaCollection: {
+    items: {
+      media: {
+        title: string;
+        description?: string;
+        url: string;
+        width: number;
+        height: number;
+      };
+    }[];
+  };
+}
+
+interface GraphQLPageCollectionResponse {
+  items: {
+    title: string;
+    slug: string;
+    sectionsCollection: {
+      items: GraphQLAiImageSection[];
+    };
+  }[];
+}
+
+interface AiCardImagesProps {
+  aiImageData: GraphQLPageCollectionResponse;
+}
+
+export default function AiCardImages({ aiImageData }: AiCardImagesProps) {
   // Check if there's valid data to work with
   if (!aiImageData?.items?.[0]?.sectionsCollection?.items) {
     return <div>No AI images available</div>;

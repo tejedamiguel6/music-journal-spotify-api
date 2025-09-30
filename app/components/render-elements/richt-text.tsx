@@ -2,6 +2,8 @@ import Image from "next/image";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS, MARKS } from "@contentful/rich-text-types";
 
+import CustomAudioPlayer from "../../components/custom-audio-player/custom-audio-player";
+
 type Props = {
   document?: any;
   assetMap?: Record<string, any>;
@@ -75,7 +77,7 @@ export default function RichText({ documents, assetMap }: Props) {
 
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
-        <div>
+        <div className="flex justify-center items-center border border-t-red-950 border-b-red-950 border-l-red-950 border-r-red-950">
           <p>{children}</p>
         </div>
       ),
@@ -98,9 +100,12 @@ export default function RichText({ documents, assetMap }: Props) {
           }
 
           return (
-            <audio controls>
-              <source src={url} type="audio/mpeg" />
-            </audio>
+            <div className="flex justify-center items-center border border-t-red-950 border-b-red-950 border-l-red-950 border-r-red-950 p-6">
+              <audio controls>
+                <source src={url} type="audio/mpeg" />
+                {/* <CustomAudioPlayer src={ url} /> */}
+              </audio>
+            </div>
           );
         }
 
@@ -116,13 +121,15 @@ export default function RichText({ documents, assetMap }: Props) {
         }
 
         return (
-          <Image
-            src={url}
-            alt={alt}
-            width={600}
-            height={400}
-            sizes="(min-width: 768px) 50vw, 100vw"
-          />
+          <div className="flex justify-center items-center border border-t-zinc-100">
+            <Image
+              src={url}
+              alt={alt}
+              width={600}
+              height={400}
+              sizes="(min-width: 768px) 50vw, 100vw"
+            />
+          </div>
         );
       },
     },
