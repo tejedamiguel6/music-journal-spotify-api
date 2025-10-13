@@ -1,14 +1,10 @@
-import getArtistData from "@/app/lib/spotify-requests/get-artist-data";
 import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
-import { RichTextHtml } from "@/app/lib/utils/rich-text-to-html";
 import Image from "next/image";
 import RichText from "@/app/components/render-elements/richt-text";
 import AlbumImage from "@/app/components/album-image/album-image";
 // import SimilarArtistImage from "@/app/components/album-image/similar-artist-album-image";
 import styles from "./page.module.css";
-
-import NowPlaying from "@/app/components/spotify-now-playing/now-playing";
 
 import ArtistStatsTable from "@/app/components/ai-agent/agent-artist/agent-artist-stat-table";
 import Loading from "./loading";
@@ -17,16 +13,16 @@ import { Suspense } from "react";
 import Link from "next/link";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     id?: string;
-  };
+  }>;
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
-  const { id: itemId } = searchParams;
+export default async function Page({ searchParams }: PageProps) {
+  const { id: itemId } = await searchParams;
 
   const query = `
     query MUSIC_ITEM_PAGE($recentlyLikedId: String!) {
@@ -183,14 +179,14 @@ export default async function Page({ params, searchParams }: PageProps) {
             <>
               <div className={styles.devSummaryHeader}>
                 <h1>dev summary</h1>
-                <h1 className={styles.devTitle}>{item.title}</h1>>
-                <h3 className={styles.devConcept}>Concept: --> {item.concept}</h3>
-                <p className={styles.programmingLanguage}>Programming Language: ----> {item.programmingLanguage}</p>
+                <h1 className={styles.devTitle}>{item.title}</h1>
+                <h3 className={styles.devConcept}>Concept: --&gt; {item.concept}</h3>
+                <p className={styles.programmingLanguage}>Programming Language: ----&gt; {item.programmingLanguage}</p>
               </div>
 
               <div className={styles.devImageContainer}>
                 {image?.slice(0, 1).map((item) => (
-                  <img
+                  <Image
                     key={item.url}
                     className={styles.devImage}
                     src={item.url}

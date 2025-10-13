@@ -1,13 +1,11 @@
 import { fetchGraphQL } from "@/app/lib/contentful-api";
 import Image from "next/image";
 
-import { RichTextHtml } from "@/app/lib/utils/rich-text-to-html";
-
 import styles from "../ai-post.module.css";
 import Post from "@/app/components/ai-posts/post";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   // cfetch graphql query for single param
   const singlePostSlug = `
@@ -48,11 +46,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <div className={styles.container}>
       {collection &&
-        collection.map((item: any, index) => {
+        collection.map((item: { title?: string; aiMediaCollection?: { items: Array<unknown> } }, index: number) => {
           return (
             <div key={index}>
               {item.aiMediaCollection?.items.map(
-                (collection, index: number) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (collection: any, index: number) => {
                   const posts = collection?.post?.content.json?.content;
                   return (
                     <>

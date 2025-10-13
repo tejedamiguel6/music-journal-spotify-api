@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { graph } from "../lib/sql-qa/graph";
+import { graph } from "../../lib/sql-qa/graph";
 
 const schema = z.object({ question: z.string().min(2) });
 
@@ -22,7 +22,7 @@ export async function askQuestion(formData: FormData) {
     return { answer };
 
     // console.log("here is your answer", answer);
-  } catch (error) {
+  } catch {
     return { error: "LLM service overloaded, try again later." };
   }
 }

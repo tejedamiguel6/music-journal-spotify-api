@@ -33,8 +33,9 @@ export async function GET(request: Request) {
         ...buildCORSHeaders(),
       },
     });
-  } catch (err: any) {
-    return new NextResponse(JSON.stringify({ error: err.message }), {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: buildCORSHeaders(),
     });

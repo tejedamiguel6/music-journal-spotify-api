@@ -2,15 +2,17 @@ import { fetchAGenre } from "../../../lib/db-request/get-genres";
 import Image from "next/image";
 import styles from "./page.module.css";
 
-export default async function Page({ 
-  params, 
-  searchParams 
-}: { 
-  params: { genre: string };
-  searchParams: { genre?: string };
+export default async function Page({
+  params,
+  searchParams
+}: {
+  params: Promise<{ genre: string }>;
+  searchParams: Promise<{ genre?: string }>;
 }) {
   // Use the query parameter if available, otherwise fall back to slug conversion
-  const genre = searchParams.genre || params.genre.replace(/-/g, " ");
+  const paramsResolved = await params;
+  const searchParamsResolved = await searchParams;
+  const genre = searchParamsResolved.genre || paramsResolved.genre.replace(/-/g, " ");
   console.log("@@genre", genre);
 
   const userGenresResults = await fetchAGenre(genre);

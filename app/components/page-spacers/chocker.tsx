@@ -20,7 +20,8 @@ export default async function ChockerSpacer() {
   const title = "choker chain spacer";
 
   const { data } = await fetchGraphQL(chokcerSpacerQuery, { title });
-  const spacerImage = data.blockMediaCollection.items.map((item) => item.media);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const spacerImage = data.blockMediaCollection.items.map((item: any) => item.media);
 
   return (
     <div className={styles.imageContainer}>

@@ -26,12 +26,12 @@
   text-align: center;
   margin-top: -70px;
 
- button {
+ /* button {
     border: 1px solid #5d350f;
     padding: 5px;
     border-radius: 10px;
    
- }
+ } */
 }
 
  .button:hover {

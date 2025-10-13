@@ -1,6 +1,6 @@
-const { runMigration } = require("contentful-migration");
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-module.exports = function (migration) {
+module.exports = function (migration: any) {
   const page = migration.createContentType("page", {
     name: "[Page] Page",
     description: "A page on the website",

@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import { cookies } from "next/headers";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const headers = {
     "Access-Control-Allow-Origin": "http://localhost:8000",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -31,9 +31,10 @@ export async function GET(request: NextRequest) {
     const data = await response.json();
     console.log("Response:-from PROFILE-->", data);
     return new NextResponse(JSON.stringify(data), { status: 200, headers });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("error at profile route", error);
-    return new Response(JSON.stringify({ error: error.message }));
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return new Response(JSON.stringify({ error: errorMessage }));
   }
 }
 

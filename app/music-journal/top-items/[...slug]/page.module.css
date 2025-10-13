@@ -38,7 +38,7 @@
         order: 2;
         width: 500px;
         height: auto;
-        img {
+        & img {
             border-radius: 1.2%;
         }
     }

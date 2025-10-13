@@ -46,7 +46,8 @@ export async function GET(request: Request) {
     return new NextResponse(JSON.stringify(data), { status: 200, headers });
   } catch (error) {
     console.error(error);
-    return new NextResponse(JSON.stringify({ error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers,
     });

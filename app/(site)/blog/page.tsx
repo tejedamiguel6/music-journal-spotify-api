@@ -1,5 +1,5 @@
-import { fetchGraphQL } from "../lib/contentful-api";
-import BlogImages from "../components/blog-images/BlogImages";
+import { fetchGraphQL } from "../../lib/contentful-api";
+import BlogImages from "../../components/blog-images/BlogImages";
 import styles from "./page.module.css";
 
 export default async function Home() {
@@ -41,12 +41,13 @@ export default async function Home() {
       <h1 className={styles.title}>Visual Diary!</h1>
       <div>
         <div>
-          {data.pageCollection?.items?.map((sectionCollections) =>
+          {data.pageCollection?.items?.map((sectionCollections: { sectionsCollection: { items: Array<{ __typename: string }> } }) =>
             sectionCollections.sectionsCollection.items.map((section) => {
               // console.log("check for type of section", section);
 
               if (section.__typename === "BlockMedia") {
                 return (
+                  // eslint-disable-next-line react/jsx-key
                   <div>
                     <BlogImages imageData={section} />
                   </div>

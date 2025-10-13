@@ -1,6 +1,4 @@
-import Link from "next/link";
 import styles from "./genres.module.css";
-import createSlug from "@/app/lib/utils/create-slug";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
 
 import Genre from "./genre";

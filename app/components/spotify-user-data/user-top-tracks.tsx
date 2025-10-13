@@ -8,9 +8,9 @@ export default function TopTracks({ userTopItemsData }) {
   const [expandedMap, setExpandedMap] = useState({});
 
   const block = userTopItemsData?.blockTopArtistsCollection?.items?.[0];
-  const tracks = block?.topArtists?.items ?? [];
 
   useEffect(() => {
+    const tracks = block?.topArtists?.items ?? [];
     if (!Array.isArray(tracks) || tracks.length === 0) return;
 
     const grouped = tracks.reduce((acc, track) => {
@@ -26,7 +26,7 @@ export default function TopTracks({ userTopItemsData }) {
     }, {});
 
     setGroupedArtists(grouped);
-  }, [tracks]);
+  }, [block]);
 
   const toggleExpanded = (artistId) => {
     setExpandedMap((prev) => ({

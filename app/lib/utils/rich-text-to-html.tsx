@@ -27,11 +27,11 @@ export function RichTextHtml(document) {
     }
 
     if (node?.nodeType === "unordered-list") {
-      return node?.content?.map((list) => {
+      return node?.content?.map((list, index) => {
         // console.log("from function", list.content[0].content[0].value);
         const listItemsContent = list.content[0].content[0].value;
         return (
-          <ul>
+          <ul key={index}>
             <li>{listItemsContent}</li>
           </ul>
         );

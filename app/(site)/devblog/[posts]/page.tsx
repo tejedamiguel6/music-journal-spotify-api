@@ -6,11 +6,11 @@ import RichText from "@/app/components/render-elements/richt-text";
 export default async function BlogPostPage({
   params,
 }: {
-  params: { posts: string };
+  params: Promise<{ posts: string }>;
 }) {
   // console.log("get params---> ", params);
 
-  const { posts } = params;
+  const { posts } = await params;
 
   // console.log("get the post slug-====@@@@@", posts);
 

@@ -1,7 +1,5 @@
 import { Almendra } from "next/font/google";
 
-import NowPlaying from "@/app/components/spotify-now-playing/now-playing";
-
 const almendraFont = Almendra({
   subsets: ["latin"],
   weight: "700",

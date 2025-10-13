@@ -1,10 +1,6 @@
-import getTopTracks from "../components/spotify-user-data/gettopTracks";
 import styles from "./page.module.css";
 import NowPlaying from "../components/spotify-now-playing/now-playing";
-import TopTracks from "../components/spotify-user-data/user-top-tracks";
 import UserTopArtists from "../components/spotify-user-data/user-top-artists";
-// AI agent stuff
-import { Agent } from "../components/ai-agent/agent";
 
 import ChockerSpacer from "../components/page-spacers/chocker";
 import Genres from "../components/genres/genres";

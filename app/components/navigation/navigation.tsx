@@ -16,7 +16,7 @@ export default function Navigation() {
         <Link href="/music-journal">MUSIC</Link>
       </ul>
       <ul>
-        <Link href="/">ABOUT</Link>
+        <Link href="/about">ABOUT</Link>
       </ul>
     </nav>
   );

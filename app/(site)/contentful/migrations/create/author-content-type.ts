@@ -1,7 +1,6 @@
-const { runMigration } = require("contentful-migration");
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-
-module.exports = function(migration) { 
+module.exports = function(migration: any) { 
 
     const author = migration.createContentType("author",{
         name: "[Item] Author",

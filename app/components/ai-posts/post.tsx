@@ -1,11 +1,11 @@
 "use client";
 import { RichTextHtml } from "@/app/lib/utils/rich-text-to-html";
-import RenderElements from "../render-elements/richt-text";
 import styles from "./post.module.css";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export default function Post({ post }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Post({ post }: { post: any[] }) {
   const [showAll, setShowAll] = useState(false);
 
   // console.log(post.length, "length of character");

@@ -6,6 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "lint": "next lint",
     "test-db": "tsx -r tsconfig-paths/register script/test-db.ts",
     "cf-export": "npx dotenv-cli -- contentful space export --management-token $CONTENTFUL_MANAGEMENT_TOKEN --space-id k64k3kt74fyv --environment-id master --content-file export.json --export-dir contentful-export --download-assets",
@@ -19,6 +22,7 @@
     "@langchain/community": "^0.3.48",
     "@langchain/langgraph": "^0.3.6",
     "@langchain/ollama": "^0.2.3",
+    "@opennextjs/cloudflare": "^1.10.1",
     "clsx": "^2.1.1",
     "contentful-migration": "^4.27.0",
     "langchain": "^0.3.29",
@@ -47,6 +51,7 @@
     "tailwindcss": "^3.4.1",
     "tsconfig": "^7.0.0",
     "tsx": "^4.20.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.42.2"
   }
 }

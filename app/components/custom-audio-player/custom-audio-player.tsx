@@ -1,3 +1,6 @@
+import { useRef, useState } from "react";
+import { Pause, Play, Volume2 } from "lucide-react";
+
 export default function CustomAudioPlayer({
   src,
   title,

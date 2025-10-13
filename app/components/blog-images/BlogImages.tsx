@@ -2,7 +2,8 @@
 import Image from "next/image";
 import styles from "./blog-images.module.css";
 
-export default function BlogImages({ imageData }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function BlogImages({ imageData }: { imageData: any }) {
   // console.log("image data", imageData);
   return (
     <div className={styles.container}>

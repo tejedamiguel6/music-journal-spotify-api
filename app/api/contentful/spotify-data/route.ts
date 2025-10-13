@@ -1,5 +1,5 @@
 import NodeCache from "node-cache";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const cache = new NodeCache({ stdTTL: 60 }); // 1-minute cache
 
@@ -10,14 +10,14 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Credentials": "true",
 };
 
-function buildResponse(body, status, extra = {}) {
+function buildResponse(body: unknown, status: number, extra: Record<string, string> = {}) {
   return new NextResponse(JSON.stringify(body), {
     status,
     headers: { "Content-Type": "application/json", ...CORS_HEADERS, ...extra },
   });
 }
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type") ?? "recent-tracks";
@@ -79,7 +79,8 @@ export async function GET(request) {
     return buildResponse(data, 200, { "X-Cache": "MISS" });
   } catch (err) {
     console.error("spotify-data route error:", err);
-    return buildResponse({ error: err.message }, 500);
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return buildResponse({ error: errorMessage }, 500);
   }
 }
 

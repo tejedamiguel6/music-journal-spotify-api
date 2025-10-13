@@ -25,8 +25,8 @@ export async function GET(request: Request) {
     const uniqueGenres: string[] = [
       ...new Set(
         data.data
-          .flatMap((item) => item.genre.split(","))
-          .map((genre) => genre.trim()) as string[]
+          .flatMap((item: { genre: string }) => item.genre.split(","))
+          .map((genre: string) => genre.trim()) as string[]
       ),
     ].splice(0, 200);
 

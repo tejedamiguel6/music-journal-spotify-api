@@ -4,7 +4,8 @@ import Link from "next/link";
 import styles from "./genres.module.css";
 import createSlug from "@/app/lib/utils/create-slug";
 
-export default function Genre({ genre }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Genre({ genre }: { genre: any }) {
   const [showAll, setShowAll] = useState(false);
 
   const genreList = genre.itemGenresCollection.items[0]?.genres ?? [];

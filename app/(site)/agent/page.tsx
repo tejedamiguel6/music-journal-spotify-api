@@ -62,7 +62,7 @@ export default function SqlQaPage() {
             SQL Question Answering System
           </h1>
           <p className="text-gray-600 mb-8">
-            Ask questions about the Miguel's music database in natural language.
+            Ask questions about the Miguel&apos;s music database in natural language.
           </p>
 
           {/* Main Form */}
