@@ -17,7 +17,7 @@ const getCachedArtistHistory = unstable_cache(
       throw new Error(error);
     }
 
-    let parsed: any;
+    let parsed: { artist: string; tracks: Array<{ track: string; album: string }>; total_plays: number; date_range: string };
     try {
       parsed = JSON.parse(summary);
     } catch {
@@ -30,8 +30,8 @@ const getCachedArtistHistory = unstable_cache(
       artist,
       tracks, // array for table rows
       totalPlays: total_plays,
-      uniqueTracks: new Set(tracks.map((t: any) => t.track)).size,
-      uniqueAlbums: new Set(tracks.map((t: any) => t.album)).size,
+      uniqueTracks: new Set(tracks.map((t) => t.track)).size,
+      uniqueAlbums: new Set(tracks.map((t) => t.album)).size,
       dateRange: date_range,
     };
   },

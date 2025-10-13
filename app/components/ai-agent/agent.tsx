@@ -1,4 +1,4 @@
-import { QuestionForm } from "@/app/agent/questions";
+import { QuestionForm } from "@/app/(site)/agent/questions";
 export async function Agent() {
   return (
     <div>

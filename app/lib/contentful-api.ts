@@ -1,4 +1,4 @@
-export async function fetchGraphQL(query: string, variables: any = {}) {
+export async function fetchGraphQL(query: string, variables: Record<string, unknown> = {}) {
   const url = `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`;
 
   return fetch(url, {

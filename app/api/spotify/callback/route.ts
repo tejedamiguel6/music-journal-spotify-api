@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
@@ -27,11 +27,11 @@ export async function GET(request) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: process.env.NEXT_CLIENT_ID,
+          client_id: process.env.NEXT_CLIENT_ID || "",
           grant_type: "authorization_code",
-          code,
-          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
-          code_verifier: codeVerifier,
+          code: code || "",
+          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI || "",
+          code_verifier: codeVerifier || "",
         }),
       }
     );

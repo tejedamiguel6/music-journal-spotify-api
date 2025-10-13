@@ -1,7 +1,5 @@
 import Image from "next/image";
-import styles from "./profile.module.css";
 import Link from "next/link";
-import { getSpotifyData } from "@/app/lib/spotify-requests/spotify";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
 
 export default async function Profile() {
@@ -43,6 +41,7 @@ export default async function Profile() {
     );
   } catch (error) {
     console.error("Error fetching profile:", error);
-    return <div>Error loading profile: {error.message}</div>;
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return <div>Error loading profile: {errorMessage}</div>;
   }
 }

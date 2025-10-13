@@ -19,8 +19,6 @@ export default function RecentlyLked({ savedTracksData }) {
         const { track, added_at } = item;
         const artistsFromArray = track.artists.map((artist) => artist.name);
         const firstArtistName = artistsFromArray[0];
-        const getArtistId = track.artists.map((artist) => artist.id);
-        const artistSlugId = getArtistId[0];
 
         return (
           <div key={track.id}>

@@ -3,8 +3,8 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { BLOCKS, MARKS } from "@contentful/rich-text-types";
 
 type Props = {
-  document?: any;
-  assetMap?: Record<string, any>;
+  documents?: unknown;
+  assetMap?: Record<string, { url: string; title: string; contentType: string; width?: number; height?: number }>;
 };
 
 export default function RichText({ documents, assetMap }: Props) {
@@ -13,9 +13,9 @@ export default function RichText({ documents, assetMap }: Props) {
 
   // 🔁 Recursively inject resolved assets into the rich text document
   function injectAssetsIntoRichText(
-    document: any,
-    assetMap?: Record<string, any>,
-  ): any {
+    document: { nodeType?: string; data?: { target?: { sys?: { id?: string } } }; content?: unknown[] },
+    assetMap?: Record<string, { url: string; title: string; contentType: string; width?: number; height?: number }>,
+  ): unknown {
     if (
       document?.nodeType === "embedded-asset-block" &&
       document.data?.target?.sys?.id
@@ -26,16 +26,19 @@ export default function RichText({ documents, assetMap }: Props) {
       // 🛑 Prevent undefined asset usage
       if (!resolvedAsset) {
         console.warn(`⚠️ Missing asset for ID: ${assetId}`);
-        document.data.target = { sys: { id: assetId }, missing: true };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (document.data as any).target = { sys: { id: assetId }, missing: true };
       } else {
-        document.data.target = resolvedAsset;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (document.data as any).target = resolvedAsset;
       }
     }
 
     // 📚 Recursively walk child nodes
     if (Array.isArray(document?.content)) {
       document.content = document.content.map((child) =>
-        injectAssetsIntoRichText(child, assetMap),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        injectAssetsIntoRichText(child as any, assetMap),
       );
     }
 
@@ -74,13 +77,13 @@ export default function RichText({ documents, assetMap }: Props) {
     renderText: (text: string) => <span className="">{text}</span>,
 
     renderNode: {
-      [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
-        <div>
+      [BLOCKS.PARAGRAPH]: (_node: unknown, children: React.ReactNode) => (
+        <div className="flex justify-center items-center border border-t-red-950 border-b-red-950 border-l-red-950 border-r-red-950">
           <p>{children}</p>
         </div>
       ),
 
-      [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+      [BLOCKS.EMBEDDED_ASSET]: (node: { data?: { target?: { missing?: boolean; contentType?: string; url?: string; title?: string; width?: number; height?: number } } }) => {
         const asset = node.data?.target;
 
         // Skip rendering if asset was not found
@@ -98,9 +101,12 @@ export default function RichText({ documents, assetMap }: Props) {
           }
 
           return (
-            <audio controls>
-              <source src={url} type="audio/mpeg" />
-            </audio>
+            <div className="flex justify-center items-center border border-t-red-950 border-b-red-950 border-l-red-950 border-r-red-950 p-6">
+              <audio controls>
+                <source src={url} type="audio/mpeg" />
+                {/* <CustomAudioPlayer src={ url} /> */}
+              </audio>
+            </div>
           );
         }
 
@@ -108,7 +114,8 @@ export default function RichText({ documents, assetMap }: Props) {
         const url = asset.url?.startsWith("http")
           ? asset.url
           : `https:${asset.url}`;
-        const alt = asset.description || asset.title || "Untitled image";
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const alt = (asset as any).description || asset.title || "Untitled image";
 
         // 🛡️ Prevent Next/Image from crashing
         if (!url || url === "https:undefined") {
@@ -116,13 +123,15 @@ export default function RichText({ documents, assetMap }: Props) {
         }
 
         return (
-          <Image
-            src={url}
-            alt={alt}
-            width={600}
-            height={400}
-            sizes="(min-width: 768px) 50vw, 100vw"
-          />
+          <div className="flex justify-center items-center border border-t-zinc-100">
+            <Image
+              src={url}
+              alt={alt}
+              width={600}
+              height={400}
+              sizes="(min-width: 768px) 50vw, 100vw"
+            />
+          </div>
         );
       },
     },

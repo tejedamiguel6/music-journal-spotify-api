@@ -4,7 +4,6 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
 import { db } from "./db";
 import { llm } from "./llm";
-import { SystemMessage } from "@langchain/core/messages";
 
 // 1 define application state
 export const State = Annotation.Root({

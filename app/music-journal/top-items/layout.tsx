@@ -1,5 +1,4 @@
 import { Almendra } from "next/font/google";
-import Navigation from "@/app/components/navigation/navigation";
 
 const almendraFont = Almendra({
   subsets: ["latin"],
@@ -8,11 +7,12 @@ const almendraFont = Almendra({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${almendraFont.className} w-full`}>
-        <Navigation />
-        {children}
-      </body>
-    </html>
+    <div className={`${almendraFont.className} flex flex-col items-center  `}>
+      {/* <div className="p-6">
+        <NowPlaying />
+      </div> */}
+
+      {children}
+    </div>
   );
 }

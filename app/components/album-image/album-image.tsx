@@ -19,9 +19,7 @@ export default function AlbumImage({ artistData, text }: AlbumImageProps) {
   return (
     <div className={styles.container}>
       {/* This is OUTSIDE the image, above it */}
-      <h2 className={styles.title}>
-        {text}
-      </h2>
+      <h2 className={styles.title}>{text}</h2>
 
       {/* This wraps the image + overlay name */}
       <div className={styles.imageContainer}>
@@ -37,9 +35,7 @@ export default function AlbumImage({ artistData, text }: AlbumImageProps) {
 
         {/* Name overlayed on top of image */}
         <div className={styles.overlay}>
-          <h1 className={styles.artistName}>
-            {artistData?.name}
-          </h1>
+          <h1 className={styles.artistName}>{artistData?.name}</h1>
         </div>
       </div>
     </div>

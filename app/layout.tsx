@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Syne, Almendra } from "next/font/google";
+import { Almendra } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/navigation/navigation";
 
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${almendraFont.className} antialiased container mx-auto `}
-      >
+      <body className={`${almendraFont.className} antialiased`}>
         <Navigation />
         {children}
       </body>

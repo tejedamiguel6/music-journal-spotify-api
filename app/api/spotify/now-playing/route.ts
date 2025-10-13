@@ -13,13 +13,13 @@ async function fetchNowPlaying(accessToken: string) {
 
 export async function GET() {
   const cookieStore = await cookies();
-  let accessToken = cookieStore.get("spotify_access_token")?.value;
+  let accessToken: string | undefined = cookieStore.get("spotify_access_token")?.value;
 
   if (!accessToken) {
     return NextResponse.json({ error: "No access token" }, { status: 401 });
   }
 
-  let res = await fetchNowPlaying(accessToken);
+  let res = await fetchNowPlaying(accessToken as string);
 
   if (res.status === 401) {
     const refresh = await fetch("http://localhost:3000/api/spotify/refresh", {
@@ -35,8 +35,8 @@ export async function GET() {
       );
     }
 
-    accessToken = (await refresh.json()).access_token;
-    res = await fetchNowPlaying(accessToken);
+    accessToken = (await refresh.json()).access_token || "";
+    res = await fetchNowPlaying(accessToken as string);
   }
 
   if (res.status === 204) return NextResponse.json(null); // nothing playing

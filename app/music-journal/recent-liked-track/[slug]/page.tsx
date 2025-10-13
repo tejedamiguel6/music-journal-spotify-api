@@ -1,17 +1,16 @@
 import getTrackData from "../../../lib/spotify-requests/get-track-data";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     id: string;
-  };
+  }>;
 };
 
-export default async function Page({ params, searchParams }: PageProps) {
-  const { slug } = params;
-  const { id } = searchParams;
+export default async function Page({ searchParams }: PageProps) {
+  const { id } = await searchParams;
 
   const trackData = await getTrackData(id);
 
