@@ -13,7 +13,8 @@
     "test-db": "tsx -r tsconfig-paths/register script/test-db.ts",
     "cf-export": "npx dotenv-cli -- contentful space export --management-token $CONTENTFUL_MANAGEMENT_TOKEN --space-id k64k3kt74fyv --environment-id master --content-file export.json --export-dir contentful-export --download-assets",
     "check-env": "npx dotenv-cli -- sh -c 'echo $CONTENTFUL_ACCESS_TOKEN && echo $CONTENTFUL_SPACE_ID'",
-    "cf-generate-types": "cf-content-types-generator contentful-export/export.json --out types/contentful"
+    "cf-generate-types": "cf-content-types-generator contentful-export/export.json --out types/contentful",
+    "graphql-codegen": "graphql-codegen"
   },
   "dependencies": {
     "@contentful/node-apps-toolkit": "^3.13.0",
@@ -28,7 +29,7 @@
     "langchain": "^0.3.29",
     "lucide-react": "^0.525.0",
     "motion": "^12.23.6",
-    "next": "15.1.7",
+    "next": "^15.5.7",
     "node-cache": "^5.1.2",
     "pg": "^8.16.3",
     "pgsql-ast-parser": "^12.0.1",
@@ -39,6 +40,10 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@graphql-codegen/cli": "^6.1.0",
+    "@graphql-codegen/typescript": "^5.0.7",
+    "@graphql-codegen/typescript-operations": "^5.0.7",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

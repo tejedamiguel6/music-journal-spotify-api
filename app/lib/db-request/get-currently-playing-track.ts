@@ -1,6 +1,6 @@
 export default async function getCurrentlyPlayingTrack() {
   try {
-    const response = await fetch("http://localhost:8080/now-listening-to");
+    const response = await fetch("https://api-spotify-tracks.mtejeda.co/now-listening-to");
 
     const data = await response.json();
     if (!response.ok) {

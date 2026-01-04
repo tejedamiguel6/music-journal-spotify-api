@@ -18,41 +18,29 @@ const base64encode = (input) => {
 }
 
 export async function GET() {
-  const clientId = process.env.NEXT_CLIENT_ID;
-  const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
-  
-  // Generate code verifier and state
-  const codeVerifier = generateRandomString(64);
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+
+  // Generate state for CSRF protection
   const state = generateRandomString(16);
-  
-  // Hash the code verifier to create a challenge
-  const encoder = new TextEncoder();
-  const data = encoder.encode(codeVerifier);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  const codeChallenge = base64encode(hash);
-  
-  // Store the code verifier and state in cookies
-  // Make sure to use await with the cookies() API
+
+  // Store state in cookies
   const cookieStore = await cookies();
-   cookieStore.set("spotify_code_verifier", codeVerifier, {
+  cookieStore.set("spotify_auth_state", state, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     maxAge: 10 * 60, // 10 minutes
     path: "/",
   });
 
-   cookieStore.set("spotify_auth_state", state, {
-    maxAge: 10 * 60, // 10 minutes
-    path: "/",
-  });
-  
-  // Build the authorization URL
+  // Build the authorization URL (standard flow, no PKCE)
   const params = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
-    scope: "user-read-private user-read-email user-library-read user-top-read user-read-currently-playing user-read-recently-played",    
+    scope: "user-read-private user-read-email user-library-read user-top-read user-read-currently-playing user-read-recently-played",
     redirect_uri: redirectUri,
-    state: state,
-    code_challenge_method: "S256",
-    code_challenge: codeChallenge
+    state: state
   });
 
   return NextResponse.redirect(

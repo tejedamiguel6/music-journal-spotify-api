@@ -12,12 +12,17 @@ const buildCORSHeaders = () => ({
 
 export async function GET(request: Request) {
   try {
-    const res = await fetch(`http://localhost:8080/recently-liked`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch(
+      `https://api-spotify-tracks.mtejeda.co/recently-liked`,
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key": process.env.NEXT_PUBLIC_SPOTIFY_BACKEND_API_KEY || "",
+        },
+      }
+    );
     console.log("Incoming origin:", request.headers.get("origin!!!!***8")); // useful for debugging
 
     const data = await res.json();

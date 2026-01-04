@@ -20,8 +20,8 @@ export async function GET() {
       body: new URLSearchParams({
         grant_type: "refresh_token",
         refresh_token: refreshToken,
-        client_id: process.env.NEXT_CLIENT_ID || "",
-        client_secret: process.env.NEXT_CLIENT_SECRET || "",
+        client_id: process.env.SPOTIFY_CLIENT_ID || "",
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
       }),
     });
 
@@ -53,7 +53,7 @@ export async function GET() {
       });
 
       // NEW — tell the Go backend
-      await fetch("http://localhost:8080/save-refresh", {
+      await fetch("https://api-spotify-tracks.mtejeda.co/save-refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh_token: data.refresh_token }),

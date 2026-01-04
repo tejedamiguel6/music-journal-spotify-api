@@ -7,9 +7,8 @@ export async function GET(request: NextRequest) {
   const state = searchParams.get("state");
 
   // Get stored values from cookies
-  const cookieStore = await cookies(); // ✅ no await here
+  const cookieStore = await cookies();
   const storedState = cookieStore.get("spotify_auth_state")?.value;
-  const codeVerifier = cookieStore.get("spotify_code_verifier")?.value;
 
   if (!state || state !== storedState) {
     return NextResponse.redirect(
@@ -18,7 +17,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Exchange code for tokens
+    // Exchange code for tokens (standard flow with client_secret)
     const tokenResponse = await fetch(
       "https://accounts.spotify.com/api/token",
       {
@@ -27,11 +26,11 @@ export async function GET(request: NextRequest) {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: process.env.NEXT_CLIENT_ID || "",
           grant_type: "authorization_code",
           code: code || "",
-          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI || "",
-          code_verifier: codeVerifier || "",
+          redirect_uri: process.env.SPOTIFY_REDIRECT_URI || "",
+          client_id: process.env.SPOTIFY_CLIENT_ID || "",
+          client_secret: process.env.SPOTIFY_CLIENT_SECRET || "",
         }),
       }
     );
@@ -41,8 +40,8 @@ export async function GET(request: NextRequest) {
     // Store access token
     cookieStore.set("spotify_access_token", tokenData.access_token, {
       httpOnly: true,
-      sameSite: "none",
-      secure: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
       maxAge: tokenData.expires_in,
       path: "/",
     });
@@ -51,15 +50,15 @@ export async function GET(request: NextRequest) {
     if (tokenData.refresh_token) {
       cookieStore.set("spotify_refresh_token", tokenData.refresh_token, {
         httpOnly: true,
-        sameSite: "none",
-        secure: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });
 
       try {
         // Send refresh token to Go backend
-        await fetch("http://localhost:8080/save-refresh", {
+        await fetch("https://api-spotify-tracks.mtejeda.co/save-refresh", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refresh_token: tokenData.refresh_token }),

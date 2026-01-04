@@ -20,13 +20,16 @@ export default async function ArtistStatsTable({
 }: {
   artistName: string;
 }) {
+  console.log("this is the name of artist", artistName);
   /* 1 – get the data */
   const result = await fetchArtistHistory(artistName);
 
   /* 2 – handle error / empty */
-  if ('error' in result) return <p className={styles.errorText}>{result.error}</p>;
+  if ("error" in result)
+    return <p className={styles.errorText}>{result.error}</p>;
 
-  const { artist, tracks, totalPlays, uniqueTracks, uniqueAlbums, dateRange } = result;
+  const { artist, tracks, totalPlays, uniqueTracks, uniqueAlbums, dateRange } =
+    result;
   if (!tracks?.length)
     return (
       <p className={styles.noDataText}>No plays recorded for this artist.</p>
@@ -48,7 +51,11 @@ export default async function ArtistStatsTable({
         <Stat label="Unique albums" value={uniqueAlbums} />
         <Stat
           label="Date range"
-          value={dateRange}
+          value={
+            typeof dateRange === "string"
+              ? dateRange
+              : `${dateRange?.from} to ${dateRange?.to}`
+          }
         />
       </div>
 
@@ -67,22 +74,26 @@ export default async function ArtistStatsTable({
 
           <tbody>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {tracks.map((t: any) => (
+            {tracks.map((t: any, index) => (
               <tr key={t.track} className={styles.tableRow}>
                 <td className={styles.td}>{t.track}</td>
                 <td className={styles.td}>{t.album}</td>
                 <td className={styles.tdCenter}>{t.play_count || "-"}</td>
                 <td className={styles.td}>
-                  {t.played_at ? new Date(t.played_at).toLocaleDateString() : "-"}
+                  {t.played_at
+                    ? new Date(t.played_at).toLocaleDateString()
+                    : "-"}
                 </td>
                 <td className={styles.td}>
-                  {t.album_cover_url && <Image
-                    src={t.album_cover_url}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className={styles.albumCover}
-                  />}
+                  {t.album_cover_url && (
+                    <Image
+                      src={t.album_cover_url}
+                      alt=""
+                      width={48}
+                      height={48}
+                      className={styles.albumCover}
+                    />
+                  )}
                 </td>
               </tr>
             ))}
