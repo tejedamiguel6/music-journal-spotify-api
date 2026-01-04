@@ -17,7 +17,12 @@ const getCachedArtistHistory = unstable_cache(
       throw new Error(error);
     }
 
-    let parsed: { artist: string; tracks: Array<{ track: string; album: string }>; total_plays: number; date_range: string };
+    let parsed: {
+      artist: string;
+      tracks: Array<{ track: string; album: string }>;
+      total_plays: number;
+      date_range: string;
+    };
     try {
       parsed = JSON.parse(summary);
     } catch {
@@ -39,16 +44,16 @@ const getCachedArtistHistory = unstable_cache(
   {
     revalidate: 604800, // 1 week in seconds
     tags: ["artist-history"], // For manual invalidation if needed
-  },
+  }
 );
 
 export async function fetchArtistHistory(artistName: string) {
-  // console.log("Fetching artist history for:", artistName);
+  console.log("Fetching artist history for:", artistName);
 
   try {
     // USE the cached function instead of calling graph directly
     const result = await getCachedArtistHistory(artistName);
-    // console.log("Successfully fetched (cached or fresh) for:", artistName);
+    console.log("Successfully fetched (cached or fresh) for:", artistName);
     return result;
   } catch (err) {
     console.error("Error in fetchArtistHistory:", err);

@@ -1,5 +1,5 @@
 export default async function fetchGenres() {
-  const url = "http://localhost:8080/recently-liked";
+  const url = "https://api-spotify-tracks.mtejeda.co/recently-liked";
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -15,7 +15,7 @@ export default async function fetchGenres() {
 }
 
 export async function fetchAGenre(genre: string) {
-  const url = `http://localhost:8080/genre/${encodeURIComponent(genre)}`;
+  const url = `https://api-spotify-tracks.mtejeda.co/genre/${encodeURIComponent(genre)}`;
 
   try {
     const response = await fetch(url);

@@ -135,9 +135,12 @@ export default async function Page({ searchParams }: PageProps) {
   const { developerLogsCollection } = pageMusicCollection.items?.[0] ?? {};
   // console.log("developerLogsCollection", developerLogsCollection);
 
+  console.log(pageMusicCollection, "pageMusicCollection");
+
   return (
     <>
-      <div className={styles.container}
+      <div
+        className={styles.container}
         key={itemJsonData?.id}
         style={{ backgroundColor: backgroundColor ?? undefined }}
       >
@@ -155,8 +158,7 @@ export default async function Page({ searchParams }: PageProps) {
             ) : null}
           </div>
           <AlbumImage artistData={itemJsonData} text="❤️MOOD🖤" />
-          <div >
-
+          <div>
             <RichText
               documents={
                 contentfulData.data.pageMusicCollection.items[0]
@@ -164,24 +166,27 @@ export default async function Page({ searchParams }: PageProps) {
               }
               assetMap={Object.fromEntries(
                 contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.links.assets.block.map(
-                  (asset) => [asset.sys.id, asset],
-                ) || [],
+                  (asset) => [asset.sys.id, asset]
+                ) || []
               )}
             />
           </div>
-
         </div>
 
         {/* start dev blog notes  */}
         {developerLogsCollection?.items?.map((item) => {
-          const image = item.screenshotsCollection.items.map((item) => item)
+          const image = item.screenshotsCollection.items.map((item) => item);
           return (
             <>
               <div className={styles.devSummaryHeader}>
                 <h1>dev summary</h1>
                 <h1 className={styles.devTitle}>{item.title}</h1>
-                <h3 className={styles.devConcept}>Concept: --&gt; {item.concept}</h3>
-                <p className={styles.programmingLanguage}>Programming Language: ----&gt; {item.programmingLanguage}</p>
+                <h3 className={styles.devConcept}>
+                  Concept: --&gt; {item.concept}
+                </h3>
+                <p className={styles.programmingLanguage}>
+                  Programming Language: ----&gt; {item.programmingLanguage}
+                </p>
               </div>
 
               <div className={styles.devImageContainer}>
@@ -196,7 +201,10 @@ export default async function Page({ searchParams }: PageProps) {
                   />
                 ))}
 
-                <Link href={`/devblog/${item.slug}`} className={styles.readMoreLink}>
+                <Link
+                  href={`/devblog/${item.slug}`}
+                  className={styles.readMoreLink}
+                >
                   Read More!
                 </Link>
               </div>
@@ -215,7 +223,7 @@ export default async function Page({ searchParams }: PageProps) {
                 />
               </div>
             );
-          },
+          }
         )}
 
         <Suspense fallback={<Loading />}>

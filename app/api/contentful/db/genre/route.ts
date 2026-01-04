@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   console.log("Incoming origin:", request.headers.get("origin")); // useful for debugging
 
   try {
-    const res = await fetch(`http://localhost:8080/genre/${genre}`, {
+    const res = await fetch(`https://api-spotify-tracks.mtejeda.co/genre/${genre}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
