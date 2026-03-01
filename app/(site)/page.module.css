@@ -1,50 +1,35 @@
-.header {
-  display: flex;
-  justify-content: space-between;
+.container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
 }
 
-.intro {
-  padding: 2.5rem;
+.header {
+    display: flex;
+    justify-content: space-between;
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.description {
-  width: 83.333333%;
-}
-
-.socialSection {
-  width: 25%;
-}
-
-.spotifyGrid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
- 
-}
-
-.profileSection {
-  grid-column: span 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-
- 
-}
-
-
-
-.artistsSection {
-  grid-column: span 4;
+.content {
+    padding-top: 2.5rem;
 }
 
 .artistsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  margin-top: 2rem;
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 810px) {
+    .artistsGrid {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 1rem;
+        margin: 0 auto;
+    }
 }

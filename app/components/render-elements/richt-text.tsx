@@ -54,10 +54,10 @@ export default function RichText({ documents, assetMap }: Props) {
   // Render rules for Contentful rich text
   const renderOptions = {
     renderMark: {
-      [MARKS.BOLD]: (text: string) => <strong>{text}</strong>,
-      [MARKS.ITALIC]: (text: string) => <em>{text}</em>,
-      [MARKS.UNDERLINE]: (text: string) => <u>{text}</u>,
-      [MARKS.CODE]: (text: string) => {
+      [MARKS.BOLD]: (text: React.ReactNode) => <strong>{text}</strong>,
+      [MARKS.ITALIC]: (text: React.ReactNode) => <em>{text}</em>,
+      [MARKS.UNDERLINE]: (text: React.ReactNode) => <u>{text}</u>,
+      [MARKS.CODE]: (text: React.ReactNode) => {
         return (
           <div className=" my-6  rounded-md overflow-hidden border border-[#2c2c2c] shadow-sm">
             <div className="flex items-center gap-2 px-3 py-2 bg-[#2d2d2d] border-b border-[#3c3c3c]">
@@ -137,7 +137,10 @@ export default function RichText({ documents, assetMap }: Props) {
     },
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const doc = hydratedDocument as any;
+
   return (
-    <div>{documentToReactComponents(hydratedDocument, renderOptions)}</div>
+    <div>{documentToReactComponents(doc, renderOptions)}</div>
   );
 }

@@ -3,23 +3,15 @@ import { cookies } from "next/headers";
 import crypto from 'crypto';
 
 // Generate random string helper
-const generateRandomString = (length) => {
+const generateRandomString = (length: number) => {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const values = crypto.getRandomValues(new Uint8Array(length));
   return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 }
 
-// Base64 encode ArrayBuffer
-const base64encode = (input) => {
-  return btoa(String.fromCharCode(...new Uint8Array(input)))
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
-}
-
 export async function GET() {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+  const clientId = process.env.SPOTIFY_CLIENT_ID ?? "";
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI ?? "";
 
   // Generate state for CSRF protection
   const state = generateRandomString(16);

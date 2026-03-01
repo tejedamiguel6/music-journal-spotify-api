@@ -3,14 +3,12 @@ import { fetchGraphQL } from "@/app/lib/contentful-api";
 import Image from "next/image";
 import RichText from "@/app/components/render-elements/richt-text";
 import AlbumImage from "@/app/components/album-image/album-image";
-// import SimilarArtistImage from "@/app/components/album-image/similar-artist-album-image";
 import styles from "./page.module.css";
 
-import ArtistStatsTable from "@/app/components/ai-agent/agent-artist/agent-artist-stat-table";
+import ArtistStatsTable from "@/app/components/artist-stats/artist-stats-table";
 import Loading from "./loading";
 
 import { Suspense } from "react";
-import Link from "next/link";
 
 interface PageProps {
   params: Promise<{
@@ -63,51 +61,6 @@ export default async function Page({ searchParams }: PageProps) {
               }
             }
           }
-          developerLogsCollection(limit: 4) {
-            items {
-              _id
-              internalId
-              title
-              slug
-              codeSnippet {
-                json
-                links {
-                  assets {
-                    block {
-                      height
-                      width
-                      url
-                    }
-                    hyperlink {
-                      url
-                    }
-                  }
-                }
-              }
-              programmingLanguage
-              concept
-              devThoughts {
-                json
-                links {
-                  assets {
-                    block {
-                      title
-                      width
-                      height
-                      url
-                    }
-                  }
-                }
-              }
-              screenshotsCollection(limit: 4) {
-                items {
-                  height
-                  width
-                  url
-                }
-              }
-            }
-          }
           similarArtistsCollection {
             items {
               name
@@ -132,10 +85,6 @@ export default async function Page({ searchParams }: PageProps) {
   const itemJsonData = pageMusicCollection.items[0]?.itemJsonData;
   // console.log("this itemJsonData", itemJsonData.name);
   const backgroundColor = pageMusicCollection.items[0]?.backgroundColor;
-  const { developerLogsCollection } = pageMusicCollection.items?.[0] ?? {};
-  // console.log("developerLogsCollection", developerLogsCollection);
-
-  console.log(pageMusicCollection, "pageMusicCollection");
 
   return (
     <>
@@ -166,51 +115,12 @@ export default async function Page({ searchParams }: PageProps) {
               }
               assetMap={Object.fromEntries(
                 contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.links.assets.block.map(
-                  (asset) => [asset.sys.id, asset]
-                ) || []
+                  (asset) => [asset.sys.id, asset],
+                ) || [],
               )}
             />
           </div>
         </div>
-
-        {/* start dev blog notes  */}
-        {developerLogsCollection?.items?.map((item) => {
-          const image = item.screenshotsCollection.items.map((item) => item);
-          return (
-            <>
-              <div className={styles.devSummaryHeader}>
-                <h1>dev summary</h1>
-                <h1 className={styles.devTitle}>{item.title}</h1>
-                <h3 className={styles.devConcept}>
-                  Concept: --&gt; {item.concept}
-                </h3>
-                <p className={styles.programmingLanguage}>
-                  Programming Language: ----&gt; {item.programmingLanguage}
-                </p>
-              </div>
-
-              <div className={styles.devImageContainer}>
-                {image?.slice(0, 1).map((item) => (
-                  <Image
-                    key={item.url}
-                    className={styles.devImage}
-                    src={item.url}
-                    alt={item.title}
-                    width={item.width}
-                    height={item.height}
-                  />
-                ))}
-
-                <Link
-                  href={`/devblog/${item.slug}`}
-                  className={styles.readMoreLink}
-                >
-                  Read More!
-                </Link>
-              </div>
-            </>
-          );
-        })}
 
         {pageMusicCollection.items[0]?.similarArtistsCollection.items[0]?.similarArtists.map(
           (artist) => {
@@ -223,7 +133,7 @@ export default async function Page({ searchParams }: PageProps) {
                 />
               </div>
             );
-          }
+          },
         )}
 
         <Suspense fallback={<Loading />}>

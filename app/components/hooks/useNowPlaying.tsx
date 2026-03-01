@@ -13,5 +13,6 @@ export default function useNowPlaying(refreshMs = 2000) {
     }
   );
 
-  return { nowPlaying: data as unknown | null };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { nowPlaying: data as any };
 }

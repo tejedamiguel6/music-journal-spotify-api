@@ -19,10 +19,6 @@
     .gridLayout {
         grid-template-columns: 1fr;
     }
-    .gridLayout .devImageContainer {
-        width: 100%;
-    }
-
     .richTextInMusic {
         display: flex;
         justify-content: center;
@@ -44,39 +40,3 @@
     }
 }
 
-.devSummaryHeader {
-    text-align: center;
-}
-
-.devTitle {
-    font-size: 1.875rem;
-}
-
-
-.programmingLanguage {
-    padding: 1rem;
-    color: #c084fc;
-}
-
-.devImageContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.devImage {
-    width: 50%;
-    height: auto;
-    border-radius: 0.5rem;
-    border: 1px solid #c084fc;
-}
-
-.readMoreLink {
-    margin-top: 0.5rem;
-    color: #c084fc;
-}
-
-.readMoreLink:hover {
-    text-decoration: underline;
-}
