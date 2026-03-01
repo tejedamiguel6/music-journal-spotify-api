@@ -1,59 +1,42 @@
-// app/music-journal/top-items/[...slug]/action.ts
 "use server";
-import { graph } from "@/app/lib/sql-qa/graph";
+import { getArtistTopTracks, getArtistStats } from "@/app/lib/db/queries";
 import { unstable_cache } from "next/cache";
 
-// Create a cached version of the graph invocation
 const getCachedArtistHistory = unstable_cache(
   async (artistName: string) => {
-    // console.log("Generating new result for:", artistName);
-
-    const { summary, error } = await graph.invoke({
-      question: "top 13 tracks with play counts",
-      artist_name: artistName,
-    });
-
-    if (error) {
-      throw new Error(error);
-    }
-
-    let parsed: {
-      artist: string;
-      tracks: Array<{ track: string; album: string }>;
-      total_plays: number;
-      date_range: string;
-    };
-    try {
-      parsed = JSON.parse(summary);
-    } catch {
-      throw new Error("Summary was not valid JSON.");
-    }
-
-    const { artist, tracks, total_plays, date_range } = parsed;
+    const [tracks, stats] = await Promise.all([
+      getArtistTopTracks(artistName),
+      getArtistStats(artistName),
+    ]);
 
     return {
-      artist,
-      tracks, // array for table rows
-      totalPlays: total_plays,
-      uniqueTracks: new Set(tracks.map((t) => t.track)).size,
-      uniqueAlbums: new Set(tracks.map((t) => t.album)).size,
-      dateRange: date_range,
+      artist: artistName,
+      tracks: tracks.map((t) => ({
+        track: t.track_name,
+        album: t.album_name,
+        album_cover_url: t.album_cover_url,
+        played_at: t.played_at,
+        play_count: t.play_count,
+      })),
+      totalPlays: stats.total_plays,
+      uniqueTracks: stats.unique_tracks,
+      uniqueAlbums: stats.unique_albums,
+      dateRange: {
+        from: stats.first_play,
+        to: stats.last_play,
+      },
     };
   },
-  ["artist-history"], // Cache key prefix
+  ["artist-history"],
   {
-    revalidate: 604800, // 1 week in seconds
-    tags: ["artist-history"], // For manual invalidation if needed
+    revalidate: 604800,
+    tags: ["artist-history"],
   }
 );
 
 export async function fetchArtistHistory(artistName: string) {
-  console.log("Fetching artist history for:", artistName);
-
   try {
-    // USE the cached function instead of calling graph directly
     const result = await getCachedArtistHistory(artistName);
-    console.log("Successfully fetched (cached or fresh) for:", artistName);
     return result;
   } catch (err) {
     console.error("Error in fetchArtistHistory:", err);

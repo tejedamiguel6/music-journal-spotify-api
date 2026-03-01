@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import formatDayAndTime from "@/app/lib/utils/format-day-time";
 
-export default function RecentlyLked({ savedTracksData }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function RecentlyLked({ savedTracksData }: { savedTracksData: any }) {
   // console.log("@@@", savedTracksData);
 
   function createSlug(str: string): string {

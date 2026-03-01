@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { fetchArtistHistory } from "@/app/music-journal/top-items/[...slug]/action";
-import styles from "./agent-artist-stat-table.module.css";
+import styles from "./artist-stats-table.module.css";
 
 /* — tiny helpers — */
 function Th({ children }: { children: React.ReactNode }) {
@@ -16,15 +16,12 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export default async function ArtistStatsTable({
-  artistName, // or artistId – whatever your route passes down
+  artistName,
 }: {
   artistName: string;
 }) {
-  console.log("this is the name of artist", artistName);
-  /* 1 – get the data */
   const result = await fetchArtistHistory(artistName);
 
-  /* 2 – handle error / empty */
   if ("error" in result)
     return <p className={styles.errorText}>{result.error}</p>;
 
@@ -35,16 +32,13 @@ export default async function ArtistStatsTable({
       <p className={styles.noDataText}>No plays recorded for this artist.</p>
     );
 
-  /* 3 – render */
   return (
     <section className={styles.container}>
-      {/* headline */}
       <h1 className={styles.headline}>
         Listening history for{" "}
         <span className={styles.artistName}>{artist}</span>
       </h1>
 
-      {/* stat-bar */}
       <div className={styles.statBar}>
         <Stat label="Total plays" value={totalPlays} />
         <Stat label="Unique tracks" value={uniqueTracks} />
@@ -59,7 +53,6 @@ export default async function ArtistStatsTable({
         />
       </div>
 
-      {/* table */}
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
@@ -74,7 +67,7 @@ export default async function ArtistStatsTable({
 
           <tbody>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {tracks.map((t: any, index) => (
+            {tracks.map((t: any) => (
               <tr key={t.track} className={styles.tableRow}>
                 <td className={styles.td}>{t.track}</td>
                 <td className={styles.td}>{t.album}</td>

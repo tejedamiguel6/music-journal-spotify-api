@@ -26,6 +26,8 @@ export default async function UserTopArtists({
 
   const { data } = await fetchGraphQL(query);
 
+  console.log(data, "is here");
+
   return (
     <div className={`${styles.gridContainer} ${className || ""}`}>
       {data.blockTopArtistsCollection.items[0].topArtists.items

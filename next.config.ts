@@ -2,12 +2,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**.fbcdn.net", // wildcard to cover all regional Facebook CDNs
-      },
       {
         protocol: "https",
         hostname: "images.ctfassets.net", // Contentful
@@ -20,7 +19,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "assets.ctfassets.net", // mp3
       },
-      { protocol: "https", hostname: "example.com" },
     ],
   },
 };

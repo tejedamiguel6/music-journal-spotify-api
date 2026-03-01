@@ -10,13 +10,7 @@ export default function Navigation() {
         </li>
       </ul>
       <ul>
-        <Link href="/">BLOG</Link>
-      </ul>
-      <ul>
-        <Link href="/music-journal">MUSIC</Link>
-      </ul>
-      <ul>
-        <Link href="/about">ABOUT</Link>
+        <Link href="/music-journal/my-collection">MY COLLECTION</Link>
       </ul>
     </nav>
   );

@@ -1,7 +1,7 @@
-import { db } from "@/app/lib/sql-qa/db";
+import { getArtistTopTracks } from "@/app/lib/db/queries";
 
 async function demo() {
-  const rows = await (await db).run("SELECT * FROM recently_played LIMIT 10;");
+  const rows = await getArtistTopTracks("Depeche Mode");
   console.table(rows);
 }
 

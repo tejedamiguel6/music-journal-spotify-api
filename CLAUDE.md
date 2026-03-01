@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Next.js 15 application with App Router that integrates with Spotify Web API and Contentful CMS. The application is a personal music journal that displays Spotify data (now playing, top tracks, top artists) alongside content managed through Contentful.
+This is a Next.js 15 application with App Router — a personal music journal that integrates with Spotify Web API, Contentful CMS, and a Neon PostgreSQL database.
 
 ### Key Integration Points
 
@@ -23,13 +23,18 @@ This is a Next.js 15 application with App Router that integrates with Spotify We
 
 **Contentful Integration:**
 - GraphQL API client in `app/lib/contentful-api.ts`
-- Content types include blog posts, AI-generated content, and media blocks
+- Content types: `PageMusic`, `BlockTopArtists`, `BlockProfileData`, `ItemGenres`, `SimilarArtists`
 - Rich text rendering with `@contentful/rich-text-react-renderer`
+
+**Neon PostgreSQL Database:**
+- Direct SQL queries via `pg` in `app/lib/db/queries.ts`
+- Tables: `recently_played`, `recently_liked`, `tracks_on_repeat`, `spotify_auth`
+- Used for artist listening stats (play counts, date ranges)
 
 **Data Flow:**
 - Spotify data fetched server-side in route handlers
 - Some Spotify data stored in Contentful to avoid frequent API calls
-- External Go backend integration for persistent refresh token storage
+- Listening history stored in Neon PostgreSQL for analytics
 
 ### Environment Variables Required
 
@@ -41,20 +46,28 @@ NEXT_CLIENT_ID (Spotify)
 NEXT_CLIENT_SECRET (Spotify)
 NEXT_PUBLIC_REDIRECT_URI
 NEXT_PUBLIC_APP_URL
+DB_HOST (Neon PostgreSQL)
+DB_PORT
+DB_NAME
+DB_USER
+DB_PASSWORD
 ```
 
 ### File Structure Notes
 
 - `app/components/` - React components organized by feature
+- `app/components/artist-stats/` - Artist listening history stats table
+- `app/components/spotify-*` - Spotify data display components
 - `app/lib/spotify-requests/` - Spotify API utilities
+- `app/lib/db/` - Direct SQL queries for Neon PostgreSQL
 - `app/lib/db-request/` - External database request utilities
 - `app/api/spotify/` - Spotify OAuth and data endpoints
 - `app/api/contentful/` - Contentful data endpoints
-- `app/music-journal/` - Main music journal pages
-- `app/dream-map/` - AI-generated content pages
+- `app/music-journal/` - Music journal sub-pages (top-items, my-collection, recent-liked-track)
+- `contentful/migrations/` - Contentful content type migration scripts
 
 ### Styling
 
 - Tailwind CSS for styling
-- Custom Google Fonts: Syne (primary), Geist Sans, Geist Mono
+- Custom Google Fonts: Almendra
 - CSS modules for component-specific styles
