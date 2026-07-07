@@ -1,6 +1,7 @@
 import NodeCache from "node-cache";
 import { NextRequest, NextResponse } from "next/server";
 import { CORS_HEADERS } from "@/app/lib/cors";
+import { getSpotifyAccessToken } from "@/app/lib/spotify-token-store";
 
 const cache = new NodeCache({ stdTTL: 60 }); // 1-minute cache
 
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type") ?? "recent-tracks";
 
-    const accessToken = request.cookies.get("spotify_access_token")?.value;
+    const accessToken = await getSpotifyAccessToken();
     if (!accessToken) {
       return buildResponse(
         { error: "No Spotify token. Log in at /api/spotify/login" },

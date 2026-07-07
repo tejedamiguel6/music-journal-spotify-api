@@ -46,3 +46,4 @@ contentful-export*/
 # cloudflare / opennext build output
 .open-next/
 .wrangler/
+.spotify-tokens.json

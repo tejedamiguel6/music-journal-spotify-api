@@ -16,7 +16,7 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--page-background, var(--background));
+  transition: background-color 0.4s ease;
   font-family: Arial, Helvetica, sans-serif;
- 
 }

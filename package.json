@@ -24,7 +24,7 @@
     "contentful-migration": "^4.27.0",
     "lucide-react": "^0.525.0",
     "motion": "^12.23.6",
-    "next": "^15.5.7",
+    "next": "^15.5.20",
     "node-cache": "^5.1.2",
     "pg": "^8.16.3",
     "react": "^19.0.0",
