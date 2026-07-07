@@ -47,3 +47,4 @@ contentful-export*/
 .open-next/
 .wrangler/
 .spotify-tokens.json
+contentful/backups/
