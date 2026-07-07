@@ -1,4 +1,4 @@
-import getTrackData from "../../../lib/spotify-requests/get-track-data";
+import { getTrackData } from "@/app/lib/spotify";
 
 type PageProps = {
   params: Promise<{
@@ -16,16 +16,14 @@ export default async function Page({ searchParams }: PageProps) {
 
 
   return (
-    <div>
-      <h1>Recent liked!!</h1>
-      <pre>{JSON.stringify(trackData, null, 2)}</pre>
+    <div className="container mx-auto">
+      <h1>{trackData.name}</h1>
 
-      {/* Optionally, display album info */}
       <h3>Album: {trackData.album?.name}</h3>
 
       <h3>Artists:</h3>
       {trackData.artists?.length >= 1 &&
-        trackData?.artists?.map((artist) => {
+        trackData.artists.map((artist: { id: string; name: string }) => {
           return <div key={artist.id}>{artist.name}</div>;
         })}
     </div>

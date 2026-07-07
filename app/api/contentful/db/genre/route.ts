@@ -1,50 +1,32 @@
 import { NextResponse } from "next/server";
-
-const ALLOWED_ORIGIN =
-  process.env.CONTENTFUL_APP_URL || "http://localhost:8000";
-
-const buildCORSHeaders = () => ({
-  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Credentials": "true",
-});
+import { CORS_HEADERS } from "@/app/lib/cors";
+import { BACKEND_API_URL } from "@/app/lib/backend-api";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const genre = searchParams.get("name") ?? "synthwave";
 
-  console.log("Incoming origin:", request.headers.get("origin")); // useful for debugging
-
   try {
-    const res = await fetch(`https://api-spotify-tracks.mtejeda.co/genre/${genre}`, {
+    const res = await fetch(`${BACKEND_API_URL}/genre/${genre}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     const data = await res.json();
 
     return new NextResponse(JSON.stringify(data), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...buildCORSHeaders(),
-      },
+      headers: { "Content-Type": "application/json", ...CORS_HEADERS },
     });
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
     return new NextResponse(JSON.stringify({ error: errorMessage }), {
       status: 500,
-      headers: buildCORSHeaders(),
+      headers: CORS_HEADERS,
     });
   }
 }
 
 export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: buildCORSHeaders(),
-  });
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }

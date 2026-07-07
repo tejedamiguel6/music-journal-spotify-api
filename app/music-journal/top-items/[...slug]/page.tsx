@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
 import Image from "next/image";
-import RichText from "@/app/components/render-elements/richt-text";
+import RichText from "@/app/components/rich-text/rich-text";
 import AlbumImage from "@/app/components/album-image/album-image";
 import styles from "./page.module.css";
 
@@ -115,7 +115,7 @@ export default async function Page({ searchParams }: PageProps) {
               }
               assetMap={Object.fromEntries(
                 contentfulData.data.pageMusicCollection.items[0]?.firstImpressionReview.links.assets.block.map(
-                  (asset) => [asset.sys.id, asset],
+                  (asset: { sys: { id: string } }) => [asset.sys.id, asset],
                 ) || [],
               )}
             />
@@ -123,8 +123,11 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
 
         {pageMusicCollection.items[0]?.similarArtistsCollection.items[0]?.similarArtists.map(
-          (artist) => {
-            // console.log("MIGUEL", artist);
+          (artist: {
+            id: string;
+            name: string;
+            images: Array<{ url: string; width: number; height: number }>;
+          }) => {
             return (
               <div key={artist.id}>
                 <AlbumImage

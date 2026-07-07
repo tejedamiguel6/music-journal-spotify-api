@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { BACKEND_API_URL } from "@/app/lib/backend-api";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
 
       try {
         // Send refresh token to Go backend
-        await fetch("https://api-spotify-tracks.mtejeda.co/save-refresh", {
+        await fetch(`${BACKEND_API_URL}/save-refresh`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refresh_token: tokenData.refresh_token }),
