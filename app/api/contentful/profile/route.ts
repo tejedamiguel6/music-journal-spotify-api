@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { CORS_HEADERS } from "@/app/lib/cors";
+import { getSpotifyAccessToken } from "@/app/lib/spotify-token-store";
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("spotify_access_token")?.value;
+    const accessToken = await getSpotifyAccessToken();
 
     if (!accessToken) {
       return new NextResponse(

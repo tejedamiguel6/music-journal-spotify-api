@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { BACKEND_API_URL } from "@/app/lib/backend-api";
+import { saveTokens } from "@/app/lib/spotify-token-store";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -35,6 +36,12 @@ export async function GET() {
         { status: response.status }
       );
     }
+
+    saveTokens({
+      accessToken: data.access_token,
+      expiresIn: data.expires_in,
+      refreshToken: data.refresh_token,
+    });
 
     // update the access token
     cookieStore.set("spotify_access_token", data.access_token, {

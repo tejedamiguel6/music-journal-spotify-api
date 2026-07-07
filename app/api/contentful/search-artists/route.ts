@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { CORS_HEADERS } from "@/app/lib/cors";
+import { getSpotifyAccessToken } from "@/app/lib/spotify-token-store";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const query = url.searchParams.get("query") || "";
   const type = url.searchParams.get("type") || "artist";
 
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("spotify_access_token")?.value;
+  const accessToken = await getSpotifyAccessToken();
 
   try {
-    const endpoint = `https://api.spotify.com/v1/search?q=${query}&type=${type}`;
+    const endpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+      query
+    )}&type=${encodeURIComponent(type)}`;
 
     if (!accessToken) {
       return new NextResponse(

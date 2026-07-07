@@ -6,6 +6,7 @@ import AlbumImage from "@/app/components/album-image/album-image";
 import styles from "./page.module.css";
 
 import ArtistStatsTable from "@/app/components/artist-stats/artist-stats-table";
+import PageBackground from "@/app/components/page-background/page-background";
 import Loading from "./loading";
 
 import { Suspense } from "react";
@@ -88,13 +89,8 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <>
-      <div
-        className={styles.container}
-        key={itemJsonData?.id}
-        style={{ backgroundColor: backgroundColor ?? undefined }}
-      >
-        {/* <NowPlaying /> */}
-
+      <PageBackground color={backgroundColor} />
+      <div className={styles.container} key={itemJsonData?.id}>
         <div className={styles.gridLayout} key={itemJsonData?.id}>
           <div className={styles.outfitVibe}>
             {outfitVibe ? (
