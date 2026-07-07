@@ -1,51 +1,40 @@
 import { NextResponse } from "next/server";
-
 import { cookies } from "next/headers";
+import { CORS_HEADERS } from "@/app/lib/cors";
 
 export async function GET() {
-  const headers = {
-    "Access-Control-Allow-Origin": "http://localhost:8000",
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Credentials": "true",
-  };
-
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("spotify_access_token")?.value;
-    const endpoint = `https://api.spotify.com/v1/me`;
 
     if (!accessToken) {
       return new NextResponse(
         JSON.stringify({
-          error:
-            "No Spotify token found. Please log in at http://localhost:3000/api/spotify/login",
+          error: "No Spotify token found. Please log in at /api/spotify/login",
         }),
-        { status: 401, headers }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
-    const response = await fetch(endpoint, {
+    const response = await fetch("https://api.spotify.com/v1/me", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const data = await response.json();
-    console.log("Response:-from PROFILE-->", data);
-    return new NextResponse(JSON.stringify(data), { status: 200, headers });
+    return new NextResponse(JSON.stringify(data), {
+      status: 200,
+      headers: CORS_HEADERS,
+    });
   } catch (error: unknown) {
-    console.log("error at profile route", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return new Response(JSON.stringify({ error: errorMessage }));
+    console.error("Error at profile route:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return new NextResponse(JSON.stringify({ error: errorMessage }), {
+      status: 500,
+      headers: CORS_HEADERS,
+    });
   }
 }
 
 export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "http://localhost:8000",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Credentials": "true",
-    },
-  });
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }

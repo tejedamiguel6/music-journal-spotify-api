@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "app/api/contentful/get-spotify-token", "app/api/contentful/search-artists"  ],
+  ],
   "exclude": [
     "node_modules"
   ]

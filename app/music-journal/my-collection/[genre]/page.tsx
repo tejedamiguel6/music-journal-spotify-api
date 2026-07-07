@@ -1,4 +1,4 @@
-import { fetchAGenre } from "../../../lib/db-request/get-genres";
+import { fetchAGenre } from "@/app/lib/backend-api";
 import Image from "next/image";
 import styles from "./page.module.css";
 
@@ -13,7 +13,6 @@ export default async function Page({
   const paramsResolved = await params;
   const searchParamsResolved = await searchParams;
   const genre = searchParamsResolved.genre || paramsResolved.genre.replace(/-/g, " ");
-  console.log("@@genre", genre);
 
   const userGenresResults = await fetchAGenre(genre);
 
@@ -23,7 +22,11 @@ export default async function Page({
 
       <div className={styles.artistsGrid}>
         {userGenresResults
-          ? userGenresResults.artists.map((item, index) => {
+          ? userGenresResults.artists.map(
+              (
+                item: { artist_image_url: string; artist_name: string },
+                index: number
+              ) => {
               return (
                 <div key={index} className={styles.artistCard}>
                   <Image

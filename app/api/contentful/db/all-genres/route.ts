@@ -1,29 +1,16 @@
 import { NextResponse } from "next/server";
+import { CORS_HEADERS } from "@/app/lib/cors";
+import { BACKEND_API_URL } from "@/app/lib/backend-api";
 
-const ALLOWED_ORIGIN =
-  process.env.CONTENTFUL_APP_URL || "http://localhost:8000";
-
-const buildCORSHeaders = () => ({
-  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Credentials": "true",
-});
-
-export async function GET(request: Request) {
+export async function GET() {
   try {
-    const res = await fetch(
-      `https://api-spotify-tracks.mtejeda.co/recently-liked`,
-      {
-        method: "GET",
-
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key": process.env.NEXT_PUBLIC_SPOTIFY_BACKEND_API_KEY || "",
-        },
-      }
-    );
-    console.log("Incoming origin:", request.headers.get("origin!!!!***8")); // useful for debugging
+    const res = await fetch(`${BACKEND_API_URL}/recently-liked`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": process.env.NEXT_PUBLIC_SPOTIFY_BACKEND_API_KEY || "",
+      },
+    });
 
     const data = await res.json();
 
@@ -37,26 +24,17 @@ export async function GET(request: Request) {
 
     return new NextResponse(JSON.stringify(uniqueGenres), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...buildCORSHeaders(),
-      },
+      headers: { "Content-Type": "application/json", ...CORS_HEADERS },
     });
   } catch (error) {
-    console.log(error, "Error fetching genres from DB");
+    console.error("Error fetching genres from backend", error);
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch genres" }),
-      {
-        status: 500,
-        headers: buildCORSHeaders(),
-      }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
 
 export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: buildCORSHeaders(),
-  });
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }

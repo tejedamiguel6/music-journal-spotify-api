@@ -38,6 +38,7 @@
     "@graphql-codegen/typescript-operations": "^5.0.7",
     "@graphql-codegen/typescript-react-apollo": "^4.3.4",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cf-content-types-generator": "^2.16.1",

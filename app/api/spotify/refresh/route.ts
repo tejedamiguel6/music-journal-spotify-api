@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { BACKEND_API_URL } from "@/app/lib/backend-api";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -52,8 +53,8 @@ export async function GET() {
         path: "/",
       });
 
-      // NEW — tell the Go backend
-      await fetch("https://api-spotify-tracks.mtejeda.co/save-refresh", {
+      // Tell the Go backend about the new refresh token
+      await fetch(`${BACKEND_API_URL}/save-refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refresh_token: data.refresh_token }),

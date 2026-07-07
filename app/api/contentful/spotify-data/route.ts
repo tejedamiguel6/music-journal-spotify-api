@@ -1,14 +1,8 @@
 import NodeCache from "node-cache";
 import { NextRequest, NextResponse } from "next/server";
+import { CORS_HEADERS } from "@/app/lib/cors";
 
 const cache = new NodeCache({ stdTTL: 60 }); // 1-minute cache
-
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "http://localhost:8000",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Credentials": "true",
-};
 
 function buildResponse(body: unknown, status: number, extra: Record<string, string> = {}) {
   return new NextResponse(JSON.stringify(body), {
