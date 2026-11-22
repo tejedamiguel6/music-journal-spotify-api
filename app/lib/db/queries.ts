@@ -15,13 +15,28 @@ async function query<T extends QueryResultRow>(
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     ssl: { rejectUnauthorized: false },
+    // Fail fast instead of hanging the request if Neon is slow or unreachable
+    connectionTimeoutMillis: 5_000,
+    query_timeout: 10_000,
   });
-  await client.connect();
   try {
+    await client.connect();
     return await client.query<T>(text, values);
   } finally {
     await client.end().catch(() => {});
   }
+}
+
+/**
+ * The Spotify refresh token the Go backend keeps in `spotify_auth` (row id 1).
+ * Read-only: the backend owns this row and is the only thing that writes it
+ * (see save-refresh-token.ts). Returns null if the row is missing.
+ */
+export async function getSpotifyRefreshToken(): Promise<string | null> {
+  const { rows } = await query<{ refresh_token: string }>(
+    "SELECT refresh_token FROM spotify_auth WHERE id = 1"
+  );
+  return rows[0]?.refresh_token ?? null;
 }
 
 export interface ArtistTrackRow {

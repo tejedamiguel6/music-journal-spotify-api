@@ -38,6 +38,7 @@ This is a Next.js 16 application with App Router — a personal music journal th
 - Direct SQL queries via `pg` in `app/lib/db/queries.ts` (SSL with `rejectUnauthorized: false`). Each query opens and closes its own `Client`; don't switch back to a module-level `Pool`, which hangs on Cloudflare Workers after the first request
 - Tables: `recently_played`, `recently_liked`, `tracks_on_repeat`, `spotify_auth`
 - Used for artist listening stats (play counts, date ranges) on top-items pages
+- `spotify_auth` (row id 1) holds the Spotify refresh token. The website only READS it (`getSpotifyRefreshToken`, used by `app/lib/spotify-token-store.ts` for the cookieless Contentful app requests). The Go backend owns that row: any new refresh token goes to the backend via `saveRefreshTokenToBackend`, never a direct write from this repo
 
 ### Environment Variables Required
 
