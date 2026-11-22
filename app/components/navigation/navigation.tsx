@@ -9,8 +9,13 @@ export default function Navigation() {
           <Link href="/">HOME</Link>
         </li>
       </ul>
-      <ul>
-        <Link href="/music-journal/my-collection">MY COLLECTION</Link>
+      <ul className={styles.links}>
+        <li>
+          <Link href="/music-journal/calendar">CALENDAR</Link>
+        </li>
+        <li>
+          <Link href="/music-journal/my-collection">MY COLLECTION</Link>
+        </li>
       </ul>
     </nav>
   );

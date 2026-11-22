@@ -1,5 +1,7 @@
 // Go backend that records Spotify listening history.
-export const BACKEND_API_URL = "https://api-spotify-tracks.mtejeda.co";
+// Override locally with NEXT_PUBLIC_BACKEND_API_URL (e.g. http://localhost:8080).
+export const BACKEND_API_URL =
+  process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "https://api-spotify-tracks.mtejeda.co";
 
 export async function fetchGenres() {
   try {

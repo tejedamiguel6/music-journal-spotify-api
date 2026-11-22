@@ -23,9 +23,10 @@ This is a Next.js 15 application with App Router — a personal music journal th
 - `getSpotifyData()` in `app/lib/spotify.ts` is the single helper for authenticated Spotify API calls; it refreshes expired access tokens directly against Spotify's token endpoint
 
 **Go Backend (listening history):**
-- Base URL exported as `BACKEND_API_URL` from `app/lib/backend-api.ts` (`https://api-spotify-tracks.mtejeda.co`)
-- Provides now-playing, recently-liked, and per-genre data; also stores Spotify refresh tokens (`/save-refresh`)
-- `useNowPlaying` hook (`app/hooks/use-now-playing.ts`) polls it via SWR
+- Base URL exported as `BACKEND_API_URL` from `app/lib/backend-api.ts` (`https://api-spotify-tracks.mtejeda.co`); override locally with `NEXT_PUBLIC_BACKEND_API_URL` (e.g. `http://localhost:8080`)
+- Provides now-playing, recently-liked, per-genre and per-day calendar (`/calendar`) data; also stores Spotify refresh tokens (`/save-refresh`)
+- `useNowPlaying` hook (`app/hooks/use-now-playing.ts`) polls it via SWR; `useListeningCalendar` (`app/hooks/use-listening-calendar.ts`) fetches one month for `/music-journal/calendar`
+- The live backend writes to the Neon branch named `development` (the `production` branch is empty). For local testing, run the backend against the Neon `local-test` branch with `DISABLE_CRON=true` (see `scripts/run-local-test.sh` in the Go repo) — never point a local backend at the live database
 
 **Contentful Integration:**
 - GraphQL API client `fetchGraphQL()` in `app/lib/contentful-api.ts`
@@ -68,7 +69,7 @@ DB_PASSWORD
 - `app/lib/db/queries.ts` - Direct SQL queries for Neon PostgreSQL
 - `app/api/spotify/` - Spotify OAuth endpoints (login, callback, refresh)
 - `app/api/contentful/` - Endpoints consumed by the external Contentful App
-- `app/music-journal/` - Journal sub-pages (top-items, my-collection, recent-liked-track)
+- `app/music-journal/` - Journal sub-pages (top-items, my-collection, recent-liked-track, calendar)
 - `contentful/migrations/` - Contentful content type migration scripts
 - `contentful-export*/` directories are gitignored space exports (recreate with `npm run cf-export`)
 
