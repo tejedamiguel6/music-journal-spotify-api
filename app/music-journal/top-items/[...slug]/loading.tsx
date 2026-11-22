@@ -1,7 +1,12 @@
+import { typewriter } from "@/app/lib/fonts";
+
 export default function Loading() {
   return (
-    <div className="border border-white p-10 text-center">
-      <h1>Artist data Loading!</h1>
-    </div>
+    <p
+      className={`${typewriter.className} py-16 text-center text-sm uppercase tracking-[0.2em] opacity-70`}
+      role="status"
+    >
+      Loading listening history…
+    </p>
   );
 }

@@ -4,7 +4,7 @@ import { connection } from "next/server";
 import createSlug from "@/app/lib/utils/create-slug";
 import styles from "./top-artists.module.css";
 import { fetchGraphQL } from "@/app/lib/contentful-api";
-import { getArtistPlayCounts } from "@/app/lib/db/queries";
+import { getArtistPlayCounts, getFirstRecordedPlay } from "@/app/lib/db/queries";
 import { typewriter } from "@/app/lib/fonts";
 
 interface SpotifyImage {
@@ -28,10 +28,17 @@ type TopArtistsProps = {
 };
 
 const playsFormat = new Intl.NumberFormat("en-US");
+const sinceFormat = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric",
+  timeZone: "America/Denver",
+});
 
 /**
- * Editorial artist grid. Ranking comes from the Contentful list; the play
- * counts underneath are all-time plays recorded in the database.
+ * Editorial artist grid, ranked by plays recorded in the database (the same
+ * numbers shown on each tile). The candidates come from the Contentful
+ * list, whose own order only breaks ties. If the database is unreachable
+ * the grid falls back to the Contentful order without counts or ranks.
  */
 export default async function TopArtists({ limit = 13 }: TopArtistsProps) {
   // Play counts are live, so render this per request instead of at build time
@@ -49,23 +56,48 @@ export default async function TopArtists({ limit = 13 }: TopArtistsProps) {
   `;
 
   const { data } = await fetchGraphQL(query);
-  const artists: TopArtistItem[] =
-    data.blockTopArtistsCollection.items[0].topArtists.items?.slice(0, limit) ?? [];
+  const candidates: TopArtistItem[] =
+    data.blockTopArtistsCollection.items[0].topArtists.items ?? [];
 
-  // The grid still renders (without counts) if the database is unreachable
-  let plays = new Map<string, number>();
+  let plays: Map<string, number> | null = null;
+  let since: Date | null = null;
   try {
-    plays = await getArtistPlayCounts(artists.map((artist) => artist.name));
+    [plays, since] = await Promise.all([
+      getArtistPlayCounts(candidates.map((artist) => artist.name)),
+      getFirstRecordedPlay(),
+    ]);
   } catch (error) {
     console.error("Couldn't load artist play counts", error);
   }
 
+  const playsFor = (artist: TopArtistItem) =>
+    plays?.get(artist.name.toLowerCase()) ?? 0;
+
+  const artists = (
+    plays
+      ? candidates
+          .map((artist, order) => ({ artist, order }))
+          // Most played first; ties keep the Contentful order
+          .sort((a, b) => playsFor(b.artist) - playsFor(a.artist) || a.order - b.order)
+          .map(({ artist }) => artist)
+      : candidates
+  ).slice(0, limit);
+
   return (
+    <>
+      <header className={styles.header}>
+        <h2 className={`${styles.label} ${typewriter.className}`}>Most played artists</h2>
+        {since && (
+          <p className={`${styles.since} ${typewriter.className}`}>
+            Plays since {sinceFormat.format(since)}
+          </p>
+        )}
+      </header>
     <ol className={styles.grid}>
       {artists.map((artist, index) => {
         const featured = index === 0;
         const image = artist.images?.[0] ?? artist.album?.images?.[0];
-        const playCount = plays.get(artist.name.toLowerCase());
+        const playCount = plays ? playsFor(artist) : undefined;
 
         return (
           <li key={artist.id} className={featured ? styles.featured : undefined}>
@@ -81,9 +113,11 @@ export default async function TopArtists({ limit = 13 }: TopArtistsProps) {
                 sizes={featured ? "(max-width: 640px) 100vw, 560px" : "(max-width: 640px) 50vw, 280px"}
                 priority={featured}
               />
-              <span className={`${styles.rank} ${typewriter.className}`}>
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              {plays && (
+                <span className={`${styles.rank} ${typewriter.className}`}>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              )}
               <span className={styles.caption}>
                 <span className={styles.name}>{artist.name}</span>
                 {playCount !== undefined && (
@@ -97,5 +131,6 @@ export default async function TopArtists({ limit = 13 }: TopArtistsProps) {
         );
       })}
     </ol>
+    </>
   );
 }

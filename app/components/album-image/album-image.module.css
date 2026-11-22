@@ -34,7 +34,8 @@
 
 .artistName {
     font-weight: 800;
-    font-size: 4.5rem;
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    padding: 0 0.5rem;
     color: white;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     text-align: center;

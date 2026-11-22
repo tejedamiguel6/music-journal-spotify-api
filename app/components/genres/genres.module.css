@@ -48,6 +48,15 @@
 .tier4 { font-size: 1.5rem; padding: 0.4rem 1.05rem; }
 .tier5 { font-size: 1.9rem; padding: 0.45rem 1.2rem; }
 
+/* Play count inside the chip on the full index (My Collection) */
+.count {
+  margin-left: 0.55em;
+  font-size: 0.6em;
+  letter-spacing: 0.08em;
+  vertical-align: 0.15em;
+  opacity: 0.6;
+}
+
 .unplayed {
   opacity: 0.55;
 }
@@ -60,10 +69,9 @@
 }
 
 .toggle {
+  display: inline-block;
   margin-top: 1.75rem;
   padding: 0;
-  background: none;
-  border: none;
   border-bottom: 1px solid currentColor;
   font-size: 0.85rem;
   letter-spacing: 0.2em;

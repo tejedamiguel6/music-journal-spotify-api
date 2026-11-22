@@ -17,7 +17,8 @@
 
 @media (max-width: 1000px) {
     .gridLayout {
-        grid-template-columns: 1fr;
+        /* minmax(0, 1fr) lets the column shrink below its images' natural width */
+        grid-template-columns: minmax(0, 1fr);
     }
     .richTextInMusic {
         display: flex;
@@ -32,9 +33,11 @@
         /* border: 2px solid purple; */
         justify-self: center;
         order: 2;
-        width: 500px;
+        width: min(500px, 100%);
         height: auto;
         & img {
+            width: 100%;
+            height: auto;
             border-radius: 1.2%;
         }
     }

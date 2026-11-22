@@ -40,6 +40,14 @@
     letter-spacing: -0.01em;
 }
 
+.byline {
+    margin: 1rem 0 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink-cream) 75%, transparent);
+}
+
 .ornament {
     display: flex;
     justify-content: center;
@@ -60,5 +68,11 @@
 
     .tagline {
         display: none;
+    }
+
+    .byline {
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        line-height: 1.6;
     }
 }

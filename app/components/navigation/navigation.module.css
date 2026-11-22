@@ -1,10 +1,54 @@
-.navigationContainer {
-    /* border: 1px solid red; */
-    display: flex;
-    justify-content: space-around;
-    padding: 15px;
+/* Lined up with the 1120px page column, typewriter labels like the
+   section headings. The current page is underlined in olive. */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.1rem 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
+
 .links {
-    display: flex;
-    gap: 1.5rem;
+  display: flex;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home,
+.link {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid transparent;
+  color: var(--ink-cream);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.home:hover,
+.link:hover,
+.home:focus-visible,
+.link:focus-visible {
+  color: var(--accent-olive);
+}
+
+.home[aria-current="page"],
+.link[aria-current="page"] {
+  color: var(--accent-olive);
+  border-bottom-color: currentColor;
+}
+
+@media (max-width: 640px) {
+  .nav {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+  }
+
+  .links {
+    gap: 1rem;
+  }
 }

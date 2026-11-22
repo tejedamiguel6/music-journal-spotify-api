@@ -147,6 +147,14 @@ export async function getArtistPlayCounts(
   return new Map(rows.map((row) => [row.name, row.plays]));
 }
 
+/** When listening history starts: the earliest recorded play, or null if none. */
+export async function getFirstRecordedPlay(): Promise<Date | null> {
+  const { rows } = await query<{ first_play: Date | null }>(
+    "SELECT MIN(played_at) AS first_play FROM recently_played"
+  );
+  return rows[0]?.first_play ?? null;
+}
+
 /**
  * All-time recorded plays per genre. A play tagged "darkwave, post-punk"
  * counts once for each genre. Keys are lowercased, trimmed genre names.
