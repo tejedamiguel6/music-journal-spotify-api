@@ -14,7 +14,7 @@ export const metadata = {
 export default function CalendarPage() {
   return (
     <div className={`${almendraFont.className} flex flex-col items-center pt-24 pb-16`}>
-      <h1 className="text-2xl mb-8">Listening Calendar</h1>
+      <h1 className="text-3xl mb-10">Listening Calendar</h1>
       <ListeningCalendar />
     </div>
   );
