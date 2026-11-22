@@ -4,3 +4,7 @@
     justify-content: space-around;
     padding: 15px;
 }
+.links {
+    display: flex;
+    gap: 1.5rem;
+}
