@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { saveRefreshTokenToBackend } from "@/app/lib/save-refresh-token";
-import { saveTokens } from "@/app/lib/spotify-token-store";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -44,14 +43,6 @@ export async function GET(request: NextRequest) {
         new URL("/auth-error?error=token_exchange_failed", request.url)
       );
     }
-
-    // Keep a server-side copy so the Contentful app (cross-site iframe,
-    // no cookies) can authenticate too.
-    saveTokens({
-      accessToken: tokenData.access_token,
-      expiresIn: tokenData.expires_in,
-      refreshToken: tokenData.refresh_token,
-    });
 
     // Store access token
     cookieStore.set("spotify_access_token", tokenData.access_token, {
