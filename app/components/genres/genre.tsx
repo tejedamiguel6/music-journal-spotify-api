@@ -1,11 +1,9 @@
-"use client";
-import { useState } from "react";
 import Link from "next/link";
 import styles from "./genres.module.css";
 import createSlug from "@/app/lib/utils/create-slug";
 import { typewriter } from "@/app/lib/fonts";
 
-const INITIAL_COUNT = 20;
+const PREVIEW_COUNT = 20;
 const TIER_CLASSES = [styles.tier1, styles.tier2, styles.tier3, styles.tier4, styles.tier5];
 const playsFormat = new Intl.NumberFormat("en-US");
 
@@ -23,20 +21,25 @@ function tierFor(plays: number, maxPlays: number) {
 export default function Genre({
   genres,
   plays,
+  variant = "preview",
 }: {
   genres: string[];
   /** Lowercased genre name → recorded plays */
   plays: Record<string, number>;
+  /**
+   * "preview" (homepage): the top genres plus a link to the full index.
+   * "index" (My Collection): every genre, with its play count shown.
+   */
+  variant?: "preview" | "index";
 }) {
-  const [showAll, setShowAll] = useState(false);
-
   const ranked = genres
     .map((name, order) => ({ name, order, plays: plays[name.trim().toLowerCase()] ?? 0 }))
     // Most played first; ties keep the Contentful order
     .sort((a, b) => b.plays - a.plays || a.order - b.order);
 
   const maxPlays = ranked[0]?.plays ?? 0;
-  const visible = showAll ? ranked : ranked.slice(0, INITIAL_COUNT);
+  const isIndex = variant === "index";
+  const visible = isIndex ? ranked : ranked.slice(0, PREVIEW_COUNT);
 
   return (
     <>
@@ -51,19 +54,23 @@ export default function Genre({
               title={count ? `${playsFormat.format(count)} plays` : "No plays recorded"}
             >
               {name}
+              {isIndex && count > 0 && (
+                <span className={`${styles.count} ${typewriter.className}`}>
+                  {playsFormat.format(count)}
+                </span>
+              )}
             </Link>
           </li>
         ))}
       </ul>
 
-      {ranked.length > INITIAL_COUNT && (
-        <button
+      {!isIndex && ranked.length > PREVIEW_COUNT && (
+        <Link
           className={`${styles.toggle} ${typewriter.className}`}
-          onClick={() => setShowAll((prev) => !prev)}
-          aria-expanded={showAll}
+          href="/music-journal/my-collection"
         >
-          {showAll ? "Show fewer" : `Show all ${ranked.length}`}
-        </button>
+          All {ranked.length} genres →
+        </Link>
       )}
     </>
   );

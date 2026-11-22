@@ -1,18 +1,38 @@
 import Image from "next/image";
 import { fetchArtistHistory } from "@/app/music-journal/top-items/[...slug]/action";
+import { typewriter } from "@/app/lib/fonts";
+import { parseDbTimestamp } from "@/app/lib/utils/db-date";
 import styles from "./artist-stats-table.module.css";
 
-/* — tiny helpers — */
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className={styles.th}>{children}</th>;
+const numberFormat = new Intl.NumberFormat("en-US");
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "America/Denver",
+});
+
+/** "Nov 14, 2026", or "–" for a missing/invalid date. */
+function formatDate(value: unknown) {
+  const date = parseDbTimestamp(value);
+  return date ? dateFormat.format(date) : "–";
 }
+
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className={styles.stat}>
-      <span className={styles.statLabel}>{label}:</span>{" "}
-      <span className={styles.statValue}>{value}</span>
+      <dt className={`${styles.statLabel} ${typewriter.className}`}>{label}</dt>
+      <dd className={styles.statValue}>{value}</dd>
     </div>
   );
+}
+
+interface TrackRow {
+  track: string;
+  album: string;
+  album_cover_url: string | null;
+  played_at: string;
+  play_count: number;
 }
 
 export default async function ArtistStatsTable({
@@ -23,70 +43,59 @@ export default async function ArtistStatsTable({
   const result = await fetchArtistHistory(artistName);
 
   if ("error" in result)
-    return <p className={styles.errorText}>{result.error}</p>;
+    return <p className={styles.message}>Couldn&apos;t load listening history.</p>;
 
-  const { artist, tracks, totalPlays, uniqueTracks, uniqueAlbums, dateRange } =
-    result;
+  const { tracks, totalPlays, uniqueTracks, uniqueAlbums, dateRange } = result;
   if (!tracks?.length)
-    return (
-      <p className={styles.noDataText}>No plays recorded for this artist.</p>
-    );
+    return <p className={styles.message}>No plays recorded for this artist yet.</p>;
 
   return (
     <section className={styles.container}>
-      <h1 className={styles.headline}>
-        Listening history for{" "}
-        <span className={styles.artistName}>{artist}</span>
-      </h1>
+      <h2 className={`${styles.label} ${typewriter.className}`}>Listening history</h2>
 
-      <div className={styles.statBar}>
-        <Stat label="Total plays" value={totalPlays} />
-        <Stat label="Unique tracks" value={uniqueTracks} />
-        <Stat label="Unique albums" value={uniqueAlbums} />
-        <Stat
-          label="Date range"
-          value={
-            typeof dateRange === "string"
-              ? dateRange
-              : `${dateRange?.from} to ${dateRange?.to}`
-          }
-        />
-      </div>
+      <dl className={styles.stats}>
+        <Stat label="Plays" value={numberFormat.format(totalPlays)} />
+        <Stat label="Tracks" value={numberFormat.format(uniqueTracks)} />
+        <Stat label="Albums" value={numberFormat.format(uniqueAlbums)} />
+        <Stat label="First logged" value={formatDate(dateRange?.from)} />
+        <Stat label="Last played" value={formatDate(dateRange?.to)} />
+      </dl>
 
       <div className={styles.tableContainer}>
         <table className={styles.table}>
-          <thead>
-            <tr className={styles.tableHeader}>
-              <Th>Track</Th>
-              <Th>Album</Th>
-              <Th>Play count</Th>
-              <Th>Last played</Th>
-              <th className={styles.thEmpty}></th>
+          <thead className={typewriter.className}>
+            <tr>
+              <th scope="col">Track</th>
+              <th scope="col" className={styles.albumCol}>Album</th>
+              <th scope="col" className={styles.numeric}>Plays</th>
+              <th scope="col" className={styles.dateCol}>Last played</th>
             </tr>
           </thead>
-
           <tbody>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {tracks.map((t: any) => (
-              <tr key={t.track} className={styles.tableRow}>
-                <td className={styles.td}>{t.track}</td>
-                <td className={styles.td}>{t.album}</td>
-                <td className={styles.tdCenter}>{t.play_count || "-"}</td>
-                <td className={styles.td}>
-                  {t.played_at
-                    ? new Date(t.played_at).toLocaleDateString()
-                    : "-"}
+            {(tracks as TrackRow[]).map((t) => (
+              <tr key={`${t.track}-${t.album}`}>
+                <td>
+                  <span className={styles.trackCell}>
+                    {t.album_cover_url ? (
+                      <Image
+                        src={t.album_cover_url}
+                        alt=""
+                        width={40}
+                        height={40}
+                        className={styles.cover}
+                      />
+                    ) : (
+                      <span className={styles.cover} aria-hidden />
+                    )}
+                    <span className={styles.trackName}>{t.track}</span>
+                  </span>
                 </td>
-                <td className={styles.td}>
-                  {t.album_cover_url && (
-                    <Image
-                      src={t.album_cover_url}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className={styles.albumCover}
-                    />
-                  )}
+                <td className={styles.albumCol}>{t.album}</td>
+                <td className={`${styles.numeric} ${typewriter.className}`}>
+                  {t.play_count ? numberFormat.format(t.play_count) : "–"}
+                </td>
+                <td className={`${styles.dateCol} ${typewriter.className}`}>
+                  {formatDate(t.played_at)}
                 </td>
               </tr>
             ))}

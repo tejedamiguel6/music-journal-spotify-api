@@ -30,7 +30,7 @@ function DayCell({ dayNumber, day }: { dayNumber: number; day: CalendarDay }) {
           src={day.album_cover_url}
           alt={`${day.top_track_name} by ${day.top_artist_name}`}
           fill
-          sizes="(max-width: 704px) 14vw, 96px"
+          sizes="(max-width: 1280px) 14vw, 190px"
           className={styles.cover}
         />
       )}

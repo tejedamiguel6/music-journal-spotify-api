@@ -6,7 +6,12 @@ import { typewriter } from "@/app/lib/fonts";
 
 import Genre from "./genre";
 
-export default async function Genres() {
+export default async function Genres({
+  variant = "preview",
+}: {
+  /** "preview" on the homepage, "index" on My Collection (see genre.tsx) */
+  variant?: "preview" | "index";
+} = {}) {
   // Play counts are live, so render this per request instead of at build time
   await connection();
 
@@ -33,7 +38,7 @@ export default async function Genres() {
   return (
     <section className={styles.section}>
       <h2 className={`${styles.title} ${typewriter.className}`}>{item.title}</h2>
-      <Genre genres={item.genres ?? []} plays={plays} />
+      <Genre genres={item.genres ?? []} plays={plays} variant={variant} />
     </section>
   );
 }

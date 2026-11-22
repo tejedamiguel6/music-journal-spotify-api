@@ -112,6 +112,27 @@ export async function getArtistTopTracks(
   return rows;
 }
 
+export interface ArtistFirstPlayRow {
+  track_name: string;
+  album_name: string;
+  played_at: string;
+}
+
+/** The first recorded play of an artist: which track, and when. */
+export async function getArtistFirstPlay(
+  artistName: string
+): Promise<ArtistFirstPlayRow | null> {
+  const { rows } = await query<ArtistFirstPlayRow>(
+    `SELECT track_name, album_name, played_at::text AS played_at
+    FROM recently_played
+    WHERE artist_name ILIKE $1
+    ORDER BY played_at ASC
+    LIMIT 1`,
+    [artistName]
+  );
+  return rows[0] ?? null;
+}
+
 export async function getArtistStats(
   artistName: string
 ): Promise<ArtistStatsRow> {
@@ -145,6 +166,14 @@ export async function getArtistPlayCounts(
     [artistNames.map((name) => name.toLowerCase())]
   );
   return new Map(rows.map((row) => [row.name, row.plays]));
+}
+
+/** When listening history starts: the earliest recorded play, or null if none. */
+export async function getFirstRecordedPlay(): Promise<Date | null> {
+  const { rows } = await query<{ first_play: Date | null }>(
+    "SELECT MIN(played_at) AS first_play FROM recently_played"
+  );
+  return rows[0]?.first_play ?? null;
 }
 
 /**
