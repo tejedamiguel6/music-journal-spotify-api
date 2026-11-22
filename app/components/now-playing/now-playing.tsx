@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import useNowPlaying, {
   useLastPlayed,
   LastPlayedTrack,
@@ -60,10 +61,14 @@ function LastPlayed({ lastPlayed }: { lastPlayed: LastPlayedTrack | null }) {
 }
 
 export default function NowPlaying() {
+  // The homepage shows this as a large hero, so skip the corner card there.
+  const onHomepage = usePathname() === "/";
   const { track, isLoading } = useNowPlaying();
   const { lastPlayed, isLoading: lastPlayedLoading } = useLastPlayed(
-    !track && !isLoading
+    !track && !isLoading && !onHomepage
   );
+
+  if (onHomepage) return null;
 
   // Don't flash the empty state while the first fetch is in flight
   if (!track && (isLoading || lastPlayedLoading)) return null;

@@ -2,7 +2,11 @@ import { fetchGraphQL } from "@/app/lib/contentful-api";
 import Image from "next/image";
 import styles from "./choker-spacer.module.css";
 
-export default async function ChokerSpacer() {
+export default async function ChokerSpacer({
+  className,
+}: {
+  className?: string;
+} = {}) {
   const chokerSpacerQuery = `
   query IMAGE_BLOCK($title: String) {
   blockMediaCollection(where: {title: $title}) {
@@ -24,7 +28,7 @@ export default async function ChokerSpacer() {
   const spacerImage = data.blockMediaCollection.items.map((item: any) => item.media);
 
   return (
-    <div className={styles.imageContainer}>
+    <div className={`${styles.imageContainer} ${className ?? ""}`}>
       <Image
         className={styles.spacerImage}
         src={spacerImage[0].url}

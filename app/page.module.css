@@ -1,38 +1,41 @@
 .container {
-    max-width: 1024px;
+    max-width: 1120px;
     margin: 0 auto;
-    padding-top: 1.5rem;
+    padding-bottom: 4rem;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+/* The chain image sits right under the masthead title */
+.ornament {
+    padding-top: 0;
 }
 
-.title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* The chain SVG has lots of empty space above and below the drawing;
+   crop it to a slim band so it reads as a rule under the title. */
+.ornament img {
+    width: min(420px, 80vw);
+    height: 72px;
+    object-fit: cover;
 }
 
 .content {
-    padding-top: 2.5rem;
+    padding: 3rem 1rem 0;
 }
 
-.artistsGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+.sectionLabel {
+    display: flex;
+    align-items: center;
     gap: 1rem;
-    margin-top: 2rem;
+    margin: 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-olive);
 }
 
-@media (max-width: 810px) {
-    .artistsGrid {
-        grid-template-columns: repeat(3, 1fr);
-        padding: 1rem;
-        margin: 0 auto;
-    }
+/* Thin rule that runs from the label to the right edge */
+.sectionLabel::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, currentColor 40%, transparent);
 }
