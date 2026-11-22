@@ -29,7 +29,7 @@ A few words you'll see:
 | **OpenNext** (`@opennextjs/cloudflare`) | The adapter that turns a Next.js build into a Worker. `opennextjs-cloudflare build` makes the `.open-next/` folder, and `opennextjs-cloudflare deploy` uploads it. |
 | **Wrangler** | Cloudflare's command-line tool. Handles login, deploys, secrets and logs. Its settings live in `wrangler.jsonc`. |
 | **Secret** | A setting such as a password or API key, stored encrypted in Cloudflare and handed to the Worker when it runs. It's the production version of `.env.local`. |
-| **Build-time vs run-time setting** | A *build-time* setting gets baked into the code when you build. Anything starting with `NEXT_PUBLIC_` is one, and so are pages pre-built from Contentful. A *run-time* setting is read while the site is running, from secrets. |
+| **Build-time vs run-time setting** | A *build-time* setting gets baked into the code when you build. Anything starting with `NEXT_PUBLIC_` is one. A *run-time* setting is read while the site is running, from secrets. |
 
 ### ⚠️ The one trap to know about
 
@@ -134,22 +134,17 @@ You only clone once. Next time, just `cd ~/Developer/music-journal-deploy && git
 
 ---
 
-## Step 5: Give the build the 4 settings it needs
+## Step 5: Give the build the one setting it needs
 
-Two pages (the homepage and `/music-journal/my-collection`) are **pre-built from Contentful during the build**, so the build needs Contentful's read-only keys. The site's own address is also baked in at build time.
-
-Copy these lines, fill in the three Contentful values from your `.env.local`, and paste them into the **same terminal** you'll deploy from:
+The site's own address is baked into the code at build time (anything starting with `NEXT_PUBLIC_` is). Paste this into the **same terminal** you'll deploy from:
 
 ```bash
-export CONTENTFUL_SPACE_ID="paste-from-.env.local"
-export CONTENTFUL_ACCESS_TOKEN="paste-from-.env.local"
-export CONTENTFUL_ENVIRONMENT="develop"
 export NEXT_PUBLIC_APP_URL="https://music.mtejeda.co"
 ```
 
-**Why `export` instead of a `.env` file?** Settings that live only in your terminal session are visible to the build, but OpenNext doesn't copy them into the Worker. They disappear when you close the terminal. (I checked: a build done this way has zero secrets inside it.)
+**Why `export` instead of a `.env` file?** Settings that live only in your terminal session are visible to the build, but OpenNext doesn't copy them into the Worker. They disappear when you close the terminal.
 
-> Use the delivery token (`CONTENTFUL_ACCESS_TOKEN`), **not** the management token. The site only reads from Contentful.
+> The homepage and My Collection load Contentful and the database on each visit, so the build doesn't need any secrets. If a build ever fails asking for Contentful (see Troubleshooting), add the three Contentful settings the same way: `export CONTENTFUL_SPACE_ID=...`, `CONTENTFUL_ACCESS_TOKEN` (the read-only delivery token, **not** the management token) and `CONTENTFUL_ENVIRONMENT`.
 
 ---
 
@@ -226,7 +221,7 @@ Where each value comes from:
 
 | Secret | Value |
 |---|---|
-| `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ACCESS_TOKEN`, `CONTENTFUL_ENVIRONMENT` | Same as step 5 (from `.env.local`). The build needed them, and now the running site needs them too. |
+| `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ACCESS_TOKEN`, `CONTENTFUL_ENVIRONMENT` | From `.env.local`. Use the read-only delivery token, not the management token. |
 | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | From `.env.local`. |
 | `SPOTIFY_REDIRECT_URI` | **Not** the local one. Use `https://music.mtejeda.co/api/spotify/callback/` (exactly what you added in step 3). |
 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | From `.env.local`. This is the live Neon database; the website only reads from it. |
@@ -274,7 +269,7 @@ git pull
 npm ci
 ```
 
-Then repeat step 5 (the 4 `export` lines, in a new terminal) and step 6 (`npm run deploy`). Secrets and the domain stay as they are.
+Then repeat step 5 (the `export` line, in a new terminal) and step 6 (`npm run deploy`). Secrets and the domain stay as they are.
 
 ### Undo a bad deploy
 
@@ -295,7 +290,7 @@ npx wrangler rollback
 | You see | Likely cause / fix |
 |---|---|
 | `Not deploying: found .env...` | You ran deploy from your normal folder. `cd ~/Developer/music-journal-deploy` instead. |
-| Build fails with `Cannot read properties of undefined (reading 'itemGenresCollection')` | The Contentful build settings are missing. Redo step 5 in this terminal. |
+| Build fails with `Cannot read properties of undefined (reading 'itemGenresCollection')` | A page is being pre-built from Contentful. Add the three Contentful `export` lines from the note in step 5, then build again. |
 | Spotify login says **INVALID_CLIENT: Invalid redirect URI** | Step 3 and the `SPOTIFY_REDIRECT_URI` secret don't match exactly (check `https`, the domain and the trailing `/`). |
 | Page loads but "Last spin" / artist stats are empty | A `DB_*` secret is wrong or missing. Run `npx wrangler secret list`, and use `wrangler tail` to see the error. |
 | `Next.js version ... is not supported` | You're deploying an old commit. `git pull` to get the Next 16 upgrade. |
@@ -305,7 +300,7 @@ npx wrangler rollback
 
 ## Good to know
 
-- **Homepage content is captured at build time.** The homepage and my-collection page are pre-built from Contentful. After you edit them in Contentful, redeploy to see the change. (Making them refresh on their own needs an R2 "incremental cache" in OpenNext, which is a nice later upgrade.)
+- **Pages are live.** The homepage and My Collection load Contentful and the database on every visit, so Contentful edits and new plays show up without redeploying.
 - **The calendar, now-playing and last-spin data are live.** Those are fetched fresh, so they update without redeploying.
 - **Database connections:** Workers can't reuse a database connection between visitors, so `app/lib/db/queries.ts` opens a short connection per query. That's why it no longer uses a shared `Pool`; the old code hung on Cloudflare after the first request.
 - **Optional security upgrade:** the website only *reads* the database. Creating a read-only Postgres role in Neon for it (instead of the main user) would make it impossible for the website to change data, even if something went wrong.
@@ -315,6 +310,6 @@ npx wrangler rollback
 Cloudflare can build and deploy from GitHub on its own (**Workers Builds**). In the dashboard, open your `music-journal` Worker, go to **Settings → Builds**, and connect the GitHub repo. Then set:
 - **Build command:** `npx opennextjs-cloudflare build`
 - **Deploy command:** `npx opennextjs-cloudflare deploy`
-- **Build variables:** the same 4 settings from step 5 (mark `CONTENTFUL_ACCESS_TOKEN` as secret)
+- **Build variables:** `NEXT_PUBLIC_APP_URL` from step 5
 
 Cloudflare builds from a clean clone, so there's no `.env` trap. Merging a PR into `main` then deploys automatically. Do the manual steps at least once first, so you know what it's doing for you.

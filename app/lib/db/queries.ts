@@ -113,3 +113,35 @@ export async function getArtistStats(
   );
   return rows[0];
 }
+
+/**
+ * All-time recorded plays per artist, for a list of artist names.
+ * Keys are lowercased names. Artists with no recorded plays are absent.
+ */
+export async function getArtistPlayCounts(
+  artistNames: string[]
+): Promise<Map<string, number>> {
+  if (artistNames.length === 0) return new Map();
+  const { rows } = await query<{ name: string; plays: number }>(
+    `SELECT LOWER(artist_name) AS name, COUNT(*)::int AS plays
+    FROM recently_played
+    WHERE LOWER(artist_name) = ANY($1)
+    GROUP BY LOWER(artist_name)`,
+    [artistNames.map((name) => name.toLowerCase())]
+  );
+  return new Map(rows.map((row) => [row.name, row.plays]));
+}
+
+/**
+ * All-time recorded plays per genre. A play tagged "darkwave, post-punk"
+ * counts once for each genre. Keys are lowercased, trimmed genre names.
+ */
+export async function getGenrePlayCounts(): Promise<Map<string, number>> {
+  const { rows } = await query<{ genre: string; plays: number }>(
+    `SELECT LOWER(TRIM(g)) AS genre, COUNT(*)::int AS plays
+    FROM recently_played, UNNEST(STRING_TO_ARRAY(genre, ',')) AS g
+    WHERE genre IS NOT NULL AND genre <> ''
+    GROUP BY LOWER(TRIM(g))`
+  );
+  return new Map(rows.map((row) => [row.genre, row.plays]));
+}

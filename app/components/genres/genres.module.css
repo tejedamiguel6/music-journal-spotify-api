@@ -1,39 +1,94 @@
+.section {
+  padding: 4.5rem 1rem 0;
+}
+
+/* Same typewriter label + running rule as "Top artists" on the homepage */
+.title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-olive);
+}
+
+.title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, currentColor 40%, transparent);
+}
+
 .container {
-  /* border: 3px solid blue;  */
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding-bottom: 90px;
- 
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.title {
-  text-align: center;
-  /* border: 1px solid red; */
-  padding: 10px;
-  font-size: x-large
+.genre {
+  display: inline-block;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--ink-cream);
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
 
-.genres {
-    border:1px solid #afaced;
+/* Size by recorded plays (square-root scale, see genre.tsx) */
+.tier1 { font-size: 0.85rem; }
+.tier2 { font-size: 1rem; }
+.tier3 { font-size: 1.2rem; }
+.tier4 { font-size: 1.5rem; padding: 0.4rem 1.05rem; }
+.tier5 { font-size: 1.9rem; padding: 0.45rem 1.2rem; }
 
-    padding: 0 10px 0 10px; 
+.unplayed {
+  opacity: 0.55;
 }
 
-
-.button {
-  text-align: center;
-  margin-top: -70px;
-
- /* button {
-    border: 1px solid #5d350f;
-    padding: 5px;
-    border-radius: 10px;
-   
- } */
+.genre:hover,
+.genre:focus-visible {
+  border-color: var(--accent-olive);
+  color: var(--accent-olive);
+  background-color: color-mix(in srgb, var(--accent-olive) 10%, transparent);
 }
 
- .button:hover {
-    color: red; 
+.toggle {
+  margin-top: 1.75rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-olive);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--ink-cream);
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding-top: 3.5rem;
   }
+
+  .container {
+    gap: 0.45rem;
+  }
+
+  .genre {
+    padding: 0.3rem 0.7rem;
+  }
+
+  .tier4 { font-size: 1.3rem; }
+  .tier5 { font-size: 1.6rem; }
+}
