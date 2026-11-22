@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { BACKEND_API_URL } from "@/app/lib/backend-api";
+import { saveRefreshTokenToBackend } from "@/app/lib/save-refresh-token";
 import { saveTokens } from "@/app/lib/spotify-token-store";
 
 export async function GET() {
@@ -61,11 +61,7 @@ export async function GET() {
       });
 
       // Tell the Go backend about the new refresh token
-      await fetch(`${BACKEND_API_URL}/save-refresh`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh_token: data.refresh_token }),
-      }).catch(console.error);
+      await saveRefreshTokenToBackend(data.refresh_token).catch(console.error);
     }
 
     // Always return success response whether refresh token was updated or not

@@ -4,13 +4,8 @@ import { BACKEND_API_URL } from "@/app/lib/backend-api";
 
 export async function GET() {
   try {
-    const res = await fetch(`${BACKEND_API_URL}/recently-liked`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-Key": process.env.NEXT_PUBLIC_SPOTIFY_BACKEND_API_KEY || "",
-      },
-    });
+    // GET endpoints on the backend are public; no API key needed.
+    const res = await fetch(`${BACKEND_API_URL}/recently-liked`);
 
     const data = await res.json();
 
