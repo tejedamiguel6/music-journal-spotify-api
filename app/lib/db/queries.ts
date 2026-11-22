@@ -1,13 +1,28 @@
-import { Pool } from "pg";
+import { Client, type QueryResultRow } from "pg";
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  ssl: { rejectUnauthorized: false },
-});
+// One connection per query. Cloudflare Workers can't reuse a socket opened
+// during a different request, so a shared module-level Pool works for the
+// first request and then hangs. A short-lived Client avoids that and behaves
+// the same under `next dev`.
+async function query<T extends QueryResultRow>(
+  text: string,
+  values?: unknown[]
+): Promise<{ rows: T[] }> {
+  const client = new Client({
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    ssl: { rejectUnauthorized: false },
+  });
+  await client.connect();
+  try {
+    return await client.query<T>(text, values);
+  } finally {
+    await client.end().catch(() => {});
+  }
+}
 
 export interface ArtistTrackRow {
   track_name: string;
@@ -38,7 +53,7 @@ export async function getLastPlayed(): Promise<LastPlayedRow | null> {
   // album_cover_url is often null in recently_played, so fall back to any
   // cover recorded for the same track (recently_played first, then
   // recently_liked, which reliably has covers).
-  const { rows } = await pool.query<LastPlayedRow>(
+  const { rows } = await query<LastPlayedRow>(
     `SELECT
       rp.track_name,
       rp.artist_name,
@@ -65,7 +80,7 @@ export async function getArtistTopTracks(
   artistName: string,
   limit = 13
 ): Promise<ArtistTrackRow[]> {
-  const { rows } = await pool.query<ArtistTrackRow>(
+  const { rows } = await query<ArtistTrackRow>(
     `SELECT
       track_name,
       album_name,
@@ -85,7 +100,7 @@ export async function getArtistTopTracks(
 export async function getArtistStats(
   artistName: string
 ): Promise<ArtistStatsRow> {
-  const { rows } = await pool.query<ArtistStatsRow>(
+  const { rows } = await query<ArtistStatsRow>(
     `SELECT
       COUNT(*)::int as total_plays,
       COUNT(DISTINCT track_name)::int as unique_tracks,

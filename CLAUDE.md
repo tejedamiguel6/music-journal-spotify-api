@@ -8,12 +8,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Build production application
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint checks
-- `npm run deploy` - Build and deploy via OpenNext to Cloudflare
+- `npm run deploy` - Build and deploy via OpenNext to Cloudflare. Refuses to run if `.env*` files are present, because OpenNext bundles them into the Worker; deploy from a clean clone with secrets set via `wrangler secret put` (full steps in `docs/deploy-cloudflare.md`)
 - `npm run test-db` - Run the Neon DB smoke-test script (`script/test-db.ts`)
 
 ## Architecture Overview
 
-This is a Next.js 15 application with App Router — a personal music journal that integrates with the Spotify Web API, Contentful CMS, a Go backend that records listening history, and a Neon PostgreSQL database. Deployed to Cloudflare via OpenNext.
+This is a Next.js 16 application with App Router — a personal music journal that integrates with the Spotify Web API, Contentful CMS, a Go backend that records listening history, and a Neon PostgreSQL database. Deployed to Cloudflare via OpenNext.
 
 ### Key Integration Points
 
@@ -35,7 +35,7 @@ This is a Next.js 15 application with App Router — a personal music journal th
 - The routes under `app/api/contentful/` are consumed by an external Contentful App (CORS origin from `CONTENTFUL_APP_URL`); shared CORS headers live in `app/lib/cors.ts`. Do not rename these route paths — the Contentful App depends on them.
 
 **Neon PostgreSQL Database:**
-- Direct SQL queries via `pg` in `app/lib/db/queries.ts` (SSL with `rejectUnauthorized: false`)
+- Direct SQL queries via `pg` in `app/lib/db/queries.ts` (SSL with `rejectUnauthorized: false`). Each query opens and closes its own `Client`; don't switch back to a module-level `Pool`, which hangs on Cloudflare Workers after the first request
 - Tables: `recently_played`, `recently_liked`, `tracks_on_repeat`, `spotify_auth`
 - Used for artist listening stats (play counts, date ranges) on top-items pages
 
