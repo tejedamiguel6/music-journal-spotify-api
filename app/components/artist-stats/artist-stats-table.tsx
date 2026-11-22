@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { fetchArtistHistory } from "@/app/music-journal/top-items/[...slug]/action";
 import { typewriter } from "@/app/lib/fonts";
+import { parseDbTimestamp } from "@/app/lib/utils/db-date";
 import styles from "./artist-stats-table.module.css";
 
 const numberFormat = new Intl.NumberFormat("en-US");
@@ -11,17 +12,10 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Denver",
 });
 
-/**
- * "Nov 14, 2026", or "–" for a missing/invalid date. The database returns
- * UTC timestamps without a zone ("2025-08-22 18:47:06"), which `new Date`
- * would read as local time, so mark them as UTC first.
- */
+/** "Nov 14, 2026", or "–" for a missing/invalid date. */
 function formatDate(value: unknown) {
-  if (!value) return "–";
-  const text = String(value);
-  const iso = /[zZ]|[+-]\d\d:?\d\d$/.test(text) ? text : `${text.replace(" ", "T")}Z`;
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "–" : dateFormat.format(date);
+  const date = parseDbTimestamp(value);
+  return date ? dateFormat.format(date) : "–";
 }
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
@@ -63,7 +57,7 @@ export default async function ArtistStatsTable({
         <Stat label="Plays" value={numberFormat.format(totalPlays)} />
         <Stat label="Tracks" value={numberFormat.format(uniqueTracks)} />
         <Stat label="Albums" value={numberFormat.format(uniqueAlbums)} />
-        <Stat label="First heard" value={formatDate(dateRange?.from)} />
+        <Stat label="First logged" value={formatDate(dateRange?.from)} />
         <Stat label="Last played" value={formatDate(dateRange?.to)} />
       </dl>
 

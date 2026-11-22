@@ -5,6 +5,15 @@
     /* margin: 0 auto; */
 }
 
+/* Artists without their own [Page] Music entry: photo, then the story */
+.basicLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 34rem;
+    margin: 3rem auto 0;
+}
+
 .gridLayout {
     display: grid;
     grid-template-columns: 1fr 1.5fr 1fr;

@@ -1,12 +1,13 @@
 "use server";
-import { getArtistTopTracks, getArtistStats } from "@/app/lib/db/queries";
+import { getArtistFirstPlay, getArtistTopTracks, getArtistStats } from "@/app/lib/db/queries";
 import { unstable_cache } from "next/cache";
 
 const getCachedArtistHistory = unstable_cache(
   async (artistName: string) => {
-    const [tracks, stats] = await Promise.all([
+    const [tracks, stats, firstPlay] = await Promise.all([
       getArtistTopTracks(artistName),
       getArtistStats(artistName),
+      getArtistFirstPlay(artistName),
     ]);
 
     return {
@@ -25,12 +26,15 @@ const getCachedArtistHistory = unstable_cache(
         from: stats.first_play,
         to: stats.last_play,
       },
+      firstTrack: firstPlay
+        ? { track: firstPlay.track_name, album: firstPlay.album_name }
+        : null,
     };
   },
-  ["artist-history"],
+  ["artist-history-v2"],
   {
-    revalidate: 604800,
-    tags: ["artist-history"],
+    revalidate: 3600, // 1 hour, so play counts and dates stay current
+    tags: ["artist-history-v2"],
   }
 );
 

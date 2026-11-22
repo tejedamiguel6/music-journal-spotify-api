@@ -6,6 +6,7 @@ import AlbumImage from "@/app/components/album-image/album-image";
 import styles from "./page.module.css";
 
 import ArtistStatsTable from "@/app/components/artist-stats/artist-stats-table";
+import DiscoveryStory from "@/app/components/discovery-story/discovery-story";
 import PageBackground from "@/app/components/page-background/page-background";
 import Loading from "./loading";
 
@@ -18,6 +19,33 @@ interface PageProps {
   searchParams: Promise<{
     id?: string;
   }>;
+}
+
+interface ArtistJson {
+  id: string;
+  name: string;
+  images: Array<{ url: string; width: number; height: number }>;
+}
+
+/**
+ * The artist from the homepage's Top Artists list (Contentful), for artists
+ * that don't have their own [Page] Music entry yet.
+ */
+async function findTopArtist(id: string): Promise<ArtistJson | null> {
+  const { data } = await fetchGraphQL(`
+    query TOP_ARTISTS {
+      blockTopArtistsCollection {
+        items {
+          topArtists
+        }
+      }
+    }
+  `);
+  for (const block of data?.blockTopArtistsCollection?.items ?? []) {
+    const match = block?.topArtists?.items?.find((item: ArtistJson) => item?.id === id);
+    if (match?.name) return match;
+  }
+  return null;
 }
 
 export default async function Page({ searchParams }: PageProps) {
@@ -81,11 +109,32 @@ export default async function Page({ searchParams }: PageProps) {
     return notFound();
   }
   const { pageMusicCollection } = contentfulData?.data;
-  // console.log("get the all data===>", pageMusicCollection);
-  const outfitVibe = pageMusicCollection?.items[0]?.outfitVibe?.url;
-  const itemJsonData = pageMusicCollection.items[0]?.itemJsonData;
-  // console.log("this itemJsonData", itemJsonData.name);
-  const backgroundColor = pageMusicCollection.items[0]?.backgroundColor;
+  const entry = pageMusicCollection?.items[0];
+
+  // No [Page] Music entry for this artist yet: still show their photo,
+  // discovery story and listening history, using the Top Artists list.
+  if (!entry?.itemJsonData) {
+    const artist = await findTopArtist(itemId);
+    if (!artist) return notFound();
+
+    return (
+      <div className={styles.container}>
+        <div className={styles.basicLayout}>
+          <AlbumImage artistData={artist} text="From the journal" />
+          <Suspense fallback={null}>
+            <DiscoveryStory artistName={artist.name} />
+          </Suspense>
+        </div>
+        <Suspense fallback={<Loading />}>
+          <ArtistStatsTable artistName={artist.name} />
+        </Suspense>
+      </div>
+    );
+  }
+
+  const outfitVibe = entry.outfitVibe?.url;
+  const itemJsonData = entry.itemJsonData;
+  const backgroundColor = entry.backgroundColor;
 
   return (
     <>
@@ -115,6 +164,9 @@ export default async function Page({ searchParams }: PageProps) {
                 ) || [],
               )}
             />
+            <Suspense fallback={null}>
+              <DiscoveryStory artistName={itemJsonData?.name} />
+            </Suspense>
           </div>
         </div>
 
