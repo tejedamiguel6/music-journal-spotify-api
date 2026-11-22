@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { BACKEND_API_URL } from "@/app/lib/backend-api";
+import { saveRefreshTokenToBackend } from "@/app/lib/save-refresh-token";
 import { saveTokens } from "@/app/lib/spotify-token-store";
 
 export async function GET(request: NextRequest) {
@@ -74,11 +74,7 @@ export async function GET(request: NextRequest) {
 
       try {
         // Send refresh token to Go backend
-        await fetch(`${BACKEND_API_URL}/save-refresh`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ refresh_token: tokenData.refresh_token }),
-        });
+        await saveRefreshTokenToBackend(tokenData.refresh_token);
       } catch (error) {
         console.error("Error saving refresh token to Go backend:", error);
       }

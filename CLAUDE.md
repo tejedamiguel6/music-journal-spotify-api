@@ -50,6 +50,7 @@ SPOTIFY_CLIENT_ID
 SPOTIFY_CLIENT_SECRET
 SPOTIFY_REDIRECT_URI
 NEXT_PUBLIC_APP_URL
+BACKEND_API_KEY             (server-only; sent as X-API-Key when saving refresh tokens to the Go backend. Never prefix with NEXT_PUBLIC_)
 DB_HOST (Neon PostgreSQL)
 DB_PORT
 DB_NAME
